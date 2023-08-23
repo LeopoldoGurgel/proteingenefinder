@@ -1,0 +1,26 @@
+{
+  "name": "genesearchproject",
+  "version": "1.0.0",
+  "description": "Gene search Engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "css-build": "node-sass --omit-source-map-url assets/css/styles.scss assets/css/styles.css",
+    "css-watch": "npm run css-build -- --watch",
+    "start": "npm run css-watch"
+    },
+  "repository": {
+    "type": "git",
+    "url": "c:\\Users\\Denise\\bootcamp\\geneSearchProject"
+  },
+  "keywords": [
+    "Gene",
+    "search",
+    "engine"
+  ],
+  "author": "Leo Gurgel and Riley Song",
+  "license": "MIT",
+  "devDependencies": {
+    "node-sass": "^9.0.0"
+  }
+}
