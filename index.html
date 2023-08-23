@@ -4,26 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gene Search Engine</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 <body>
-    <header>
+    <section class="section">
+    <header class="container">
         <!-- <img src="logo.img"> -->
-        <h1>Gene Search Engine</h1>
+        <h1 class="title">Gene Search Engine</h1>
     </header>
-    <main>
-        <aside>
-            <form name="geneSearch">
-                <input type="text" id="deneInput">
-                <select>
+    </section>
+    <main class="columns">
+        <aside class="column is-narrow is-3" style="height: calc(100vh - 2rem)">
+            <form name="geneSearch" class="box">
+                <input type="text" id="geneInput" class=" "  style="width: 75%">
+                <input type="submit" value="Search" class="button is-primary is-tiny" style="width: 23%">
+                <select id="species-menu" class="select is-medium"  style="width: 75%">
+
                     <option>option 1</option>
                     <option>option 2</option>
                     <option>option 3</option>
                     <option>option 4</option>
                 </select>
-                <input type="submit" value="Search">
             </form>
-            <div>
+            <div id="table-of-contents" class="box">
+
                 <table>
                     <th>Table of Contents</th>
                     <tr><td>Gene name</td></tr>
@@ -37,9 +42,10 @@
                 </table>
             </div>
         </aside>
-        <section id="mainSection">
-            <div id="geneInfo">
-                <img src="#">
+
+        <section id="mainSection" class=" column" style="height: calc(100vh - 2rem); overflow-y: auto;">
+            <div id="geneInfo" class="box">
+                <img src="#" style="width: 100px; height: 130px; float: right;">
                 <h3>Gene name</h3><p id="geneNameDisplay"></p>
                 <p>Protein</p>
                 <p id="proteinDisplay"></p>
@@ -50,7 +56,8 @@
                 <p>Basic summary</p>
                 <p id="bsDisplay"></p>
             </div>
-            <div id="phenotypes">
+
+            <div id="phenotypes" class="box">
                 <ol>
                     <li>Disease 1</li>
                     <li>Disease 2</li>
@@ -58,7 +65,9 @@
                     <li>Disease ...</li>
                 </ol>
             </div>
-            <div id="recentResearch">
+
+            <div id="recentResearch" class="box">
+
                 <ol>
                     <li>PubMed article 1</li>
                     <li>PubMed article 2</li>
