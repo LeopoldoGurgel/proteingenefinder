@@ -1,11 +1,16 @@
-var userGene = 'ae'
-var userSpecies = 'human'
-var uniprotAccessionCode;
-var pdbID;
+// var userGene = $('#geneInput').val
+// var userSpecies = $('#speciesMenu').val
 
+console.log ()
+var userGene = 'cftr'
+var userSpecies = 'Human'
+
+
+var x = fetchAccessionID(userGene, userSpecies)
 
 //gets accession number and PDB id of user search
-fetch(`https://rest.uniprot.org/uniprotkb/search?query=${userGene}+AND+${userSpecies}+AND+reviewed:true&fields=accession,xref_pdb&format=json&size=1`)
+function fetchAccessionID(geneName, speciesName){
+fetch(`https://rest.uniprot.org/uniprotkb/search?query=${geneName}+AND+${speciesName}+AND+reviewed:true&fields=accession,xref_pdb&format=json&size=1`)
     .then(function (response) {
         return response.json();
     })
@@ -13,13 +18,16 @@ fetch(`https://rest.uniprot.org/uniprotkb/search?query=${userGene}+AND+${userSpe
         console.log(data)
         uniprotAccessionCode = data.results[0].primaryAccession
         pdbID = (data.results[0].uniProtKBCrossReferences[0].id).toLowerCase();
-        console.log(pdbID);
-        getPDBImg(pdbID);
+        console.log(pdbID)
+
+        // call all other fetches
+        fetchPDBImg(pdbID)
     });
+}
 
 
 // retrieve PDB image of protein product
-var getPDBImg = function (imgID){
+function fetchPDBImg(imgID){
     fetch(`https://cdn.rcsb.org/images/structures/${imgID}_assembly-1.jpeg`)
     .then(function (response) {
         return response.blob();
@@ -31,3 +39,8 @@ var getPDBImg = function (imgID){
         pdbImgEl.attr('src', imageUrl); // Set the src attribute of the image element
     });
 }
+
+fetch(`https://rest.uniprot.org/uniprotkb/search?query=${geneName}+AND+${speciesName}+AND+reviewed:true&fields=accession,xref_pdb&format=json&size=1`)
+    .then(function (response) {
+        return response.json();
+    })
