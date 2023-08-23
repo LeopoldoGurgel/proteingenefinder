@@ -1,17 +1,8 @@
-var userGene = 'ubiquitin'
+var userGene = 'ae'
 var userSpecies = 'human'
 var uniprotAccessionCode;
 var pdbID;
 
-// fetch (`https://www.uniprot.org/uniprot/?query=gene:${userGene}+AND+organism:${userSpecies}&format=json`, {
-//     mode: 'no-cors'
-// })
-// .then(function (response) {
-//     return response.json();
-//   })
-//   .then(function (data) {
-//     console.log(data)
-//   });
 
 //gets accession number and PDB id of user search
 fetch(`https://rest.uniprot.org/uniprotkb/search?query=${userGene}+AND+${userSpecies}+AND+reviewed:true&fields=accession,xref_pdb&format=json&size=1`)
@@ -21,16 +12,22 @@ fetch(`https://rest.uniprot.org/uniprotkb/search?query=${userGene}+AND+${userSpe
     .then(function (data) {
         console.log(data)
         uniprotAccessionCode = data.results[0].primaryAccession
-        pdbID = data.results[0].uniProtKBCrossReferences[0].id;
+        pdbID = (data.results[0].uniProtKBCrossReferences[0].id).toLowerCase();
         console.log(pdbID);
+        getPDBImg(pdbID);
     });
 
 
-// fetch(`https://rest.uniprot.org/uniprotkb/P13569.json?fields=cc_tissue_specificity`)
-
-// fetch PDB  
-// fetch(`https://cdn.rcsb.org/pdb/6msm/6msm.pdb1_500.jpg`)
-
-// fetch(`https://cdn.rcsb.org/images/rutgers/1XYZ/1XYZ_assembly-1.png`)
-
-// (`https://cdn.rcsb.org/images/rutgers/2MOU/<PDB_ID>_assembly-1.png`)
+// retrieve PDB image of protein product
+var getPDBImg = function (imgID){
+    fetch(`https://cdn.rcsb.org/images/structures/${imgID}_assembly-1.jpeg`)
+    .then(function (response) {
+        return response.blob();
+    })
+    .then(function (blob) {
+        console.log(blob)
+        var imageUrl = URL.createObjectURL(blob); // Create an object URL from the Blob
+        var pdbImgEl = $('#pdbImg'); // Get the image element
+        pdbImgEl.attr('src', imageUrl); // Set the src attribute of the image element
+    });
+}
