@@ -20,7 +20,7 @@
     <main class="columns">
         <aside class="column is-narrow is-3" style="height: calc(100vh - 2rem)">
             <form name="geneSearch" class="box">
-                <input type="text" id="geneInput" class=" "  style="width: 75%">
+                <input type="text" id="geneInput" class=""  style="width: 75%; height: 40px; margin-botton: 5px">
                 <input type="submit" value="Search" class="button is-primary is-tiny" style="width: 23%">
                 <select id="species-menu" class="select is-medium"  style="width: 75%">
                     <option>option 1</option>
@@ -45,7 +45,7 @@
         </aside>
         <section id="mainSection" class=" column" style="height: calc(100vh - 2rem); overflow-y: auto;">
             <div id="geneInfo" class="box">
-                <img src="#" style="width: 100px; height: 130px; float: right;">
+                <img src="#" id="pdbImg" style="width: 100px; height: 130px; float: right;">
                 <h3>Gene name</h3><p id="geneNameDisplay"></p>
                 <p>Protein</p>
                 <p id="proteinDisplay"></p>
