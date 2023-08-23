@@ -1,5 +1,5 @@
-var userGene = 'ae'
-var userSpecies = 'human'
+var userGene = document.getElementById("geneInput").value;
+var userSpecies = document.getElementById("speciesMenu").value;
 var uniprotAccessionCode;
 var pdbID;
 

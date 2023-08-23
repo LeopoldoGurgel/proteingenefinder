@@ -1,6 +1,6 @@
 # Gene Research Engine
 
-## Deployed app URL goes here
+https://leopoldogurgel.github.io/geneSearchProject/
 
 ## DESCRIPTION
 
