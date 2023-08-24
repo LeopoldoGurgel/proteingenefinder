@@ -15,60 +15,63 @@ function fetchAccessionID(geneName, speciesName) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data)
             var uniprotAccessionCode = data.results[0].primaryAccession
             var pdbID = (data.results[0].uniProtKBCrossReferences[0].id).toLowerCase();
-            console.log(uniprotAccessionCode)
-            console.log(pdbID)
+            console.log("uniProt accession code --> " + uniprotAccessionCode)
+            console.log("pdbID --> " + pdbID)
 
             //these fetches are ALWAYS called (card1 genbank ID)
+
             //get genbank UID and summary!
             fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=${uniprotAccessionCode}&api_key=${NCBIAPIKey}&retmode=json&retmax=1`)
                 .then(function (response) {
                     return response.json();
                 })
                 .then(function (data) {
-                    console.log(data)
                     var genbankUID = data.esearchresult.idlist;
-                    console.log(genbankUID)
+                    console.log("genbank UID --> " + genbankUID)
 
-                    //get genbank summary as var geneSummary!
+                    //get genbank summary as var geneSummary!=
                     fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gene&id=${genbankUID}&api_key=${NCBIAPIKey}&retmode=json`)
                         .then(function (response) {
                             return response.json();
                         })
                         .then(function (data) {
-                            var geneSummary =  data.result[`${genbankUID}`].summary
-                            console.log(geneSummary)
+                            var geneSummary = data.result[`${genbankUID}`].summary
+                            console.log("gene summary --> " + geneSummary)
+                            $('#bsDisplay').text(geneSummary);
                         });
                 });
+
             //get pdb image
             fetch(`https://cdn.rcsb.org/images/structures/${pdbID}_assembly-1.jpeg`)
                 .then(function (response) {
                     return response.blob();
                 })
                 .then(function (blob) {
-                    console.log(blob)
                     var imageUrl = URL.createObjectURL(blob); // Create an object URL from the Blob
                     var pdbImgEl = $('#pdbImg'); // Get the image element
                     pdbImgEl.attr('src', imageUrl); // Set the src attribute of the image element
                 });
 
 
-            // fetchCard1Info(uniprotAccessionCode);
+            //retrieve uniprot info for gene name, protein name, organism, amino acid length + basic summary
+            fetch(`https://rest.uniprot.org/uniprotkb/${uniprotAccessionCode}?format=json&fields=organism_name,protein_name,length&size=1`)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    console.log(data)
+                    var proteinName = data.proteinDescription.recommendedName.fullName.value
+                    var AALength = data.sequence.length;
+                    console.log("amino acid length --> " + AALength)
+                    console.log("protein name --> " + proteinName)
+                });
+
 
             // call all other fetches (add if statement for advance search)
 
         });
 }
 
-//retrieve uniprot info for gene name, protein name, organism, amino acid length + basic summary
-function fetchCard1Info(geneCode) {
-    fetch(`https://rest.uniprot.org/uniprotkb/${geneCode}?format=json&size=1`)
-        .then(function (response) {
-            return response.json();
-        })
-}
 
-//fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=P13569&api_key=d019ce82781c44b8ac9d2547bbc391e9a908&retmode=json&retmax=1`)
-// fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gene&id=1080&api_key=d019ce82781c44b8ac9d2547bbc391e9a908&retmode=json`)
