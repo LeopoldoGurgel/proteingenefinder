@@ -1,6 +1,7 @@
 // var userGene = $('#geneInput').val
 // var userSpecies = $('#speciesMenu').val
 
+
 var NCBIAPIKey = 'd019ce82781c44b8ac9d2547bbc391e9a908';
 var userGene = 'cftr'
 var userSpecies = 'Human'
