@@ -1,30 +1,47 @@
 // var userGene = $('#geneInput').val
 // var userSpecies = $('#speciesMenu').val
 
-console.log ()
+var NCBIAPIKey = 'd019ce82781c44b8ac9d2547bbc391e9a908';
 var userGene = 'cftr'
 var userSpecies = 'Human'
 
 
-var x = fetchAccessionID(userGene, userSpecies)
+fetchAccessionID(userGene, userSpecies)
 
 //gets accession number and PDB id of user search
 function fetchAccessionID(geneName, speciesName){
-fetch(`https://rest.uniprot.org/uniprotkb/search?query=${geneName}+AND+${speciesName}+AND+reviewed:true&fields=accession,xref_pdb&format=json&size=1`)
+fetch(`https://rest.uniprot.org/uniprotkb/search?query=${geneName}+AND+organism_name:${speciesName}+AND+reviewed:true&fields=accession,xref_pdb&format=json&size=5`)
     .then(function (response) {
         return response.json();
     })
     .then(function (data) {
         console.log(data)
-        uniprotAccessionCode = data.results[0].primaryAccession
-        pdbID = (data.results[0].uniProtKBCrossReferences[0].id).toLowerCase();
+        var uniprotAccessionCode = data.results[0].primaryAccession
+        var pdbID = (data.results[0].uniProtKBCrossReferences[0].id).toLowerCase();
+        console.log(uniprotAccessionCode)
         console.log(pdbID)
 
-        // call all other fetches
-        fetchPDBImg(pdbID)
+        // call all other fetches (add if statement for advance search)
+
+        //these fetches are always called (card1 and pdb+genbank IDs)
+        fetchPDBImg(pdbID);
+        fetchGenBankID(uniprotAccessionCode, NCBIAPIKey);
+        fetchCard1Info(uniprotAccessionCode);
+        
     });
 }
-
+// retrives genbank UID as var genbankUID
+function fetchGenBankID(geneCode, apiKey) {
+fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=${geneCode}&api_key=${apiKey}&retmode=json&retmax=1`)
+.then(function (response) {
+    return response.json();
+})
+.then(function (data) {
+    console.log(data)
+    var genbankUID = data.esearchresult.idlist;
+    console.log(genbankUID)
+});
+}
 
 // retrieve PDB image of protein product
 function fetchPDBImg(imgID){
@@ -40,7 +57,15 @@ function fetchPDBImg(imgID){
     });
 }
 
-fetch(`https://rest.uniprot.org/uniprotkb/search?query=${geneName}+AND+${speciesName}+AND+reviewed:true&fields=accession,xref_pdb&format=json&size=1`)
+//retrieve uniprot info for gene name, protein name, organism, amino acid length + basic summary
+function fetchCard1Info(geneCode) {
+    fetch(`https://rest.uniprot.org/uniprotkb/${geneCode}?format=json&size=1`)
     .then(function (response) {
         return response.json();
     })
+}
+
+//
+fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=P13569&api_key=d019ce82781c44b8ac9d2547bbc391e9a908&retmode=json&retmax=1`)
+
+//
