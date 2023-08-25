@@ -15,8 +15,13 @@
 <body class="has-background-white-ter">
     <section class="section">
     <header class="container">
-        <!-- <img src="logo.img"> -->
-        <h1 class="title"><span class="material-symbols-outlined" style="font-size: 1.5em; transform: rotate(20deg);">genetics</span>       Gene Search Engine</h1>
+        <!-- <img src="logo.img"> ARE WE ADDING ONE? -->
+
+        <!-- PAGE "LOGO" (IT'S AN ICON, ACTUALLY) AND H1  -->
+        <h1 class="title"><span class="material-symbols-outlined" 
+        style="font-size: 1.5em; transform: rotate(20deg);">genetics</span>       Gene Search Engine</h1>
+
+
     </header>
     </section>
     <main class="columns">
@@ -28,17 +33,24 @@
                     <input type="submit" value="Search" class="button is-primary is-tiny" style="width: 23%">
                 </div>
                 <div id="line2" style="padding:5px">
-                    <select id="speciesMenu" class="select is-medium"  style="width: 73%; font-size: 1em;">
 
+
+                    <!-- DROPDOWN MENU -->
+                    <select id="speciesMenu" class="select is-medium"  style="width: 73%; font-size: 1em;">                        
                     <option value="human">Human (homosapiens)</option>
                     <option>option 2</option>
                     <option>option 3</option>
                     <option>option 4</option>
                     </select>
+
+
+
                     <button id="advSearchBtn" class="button is-tiny" style="width: 23%; font-size: 0.9em; padding: 19px 0"><p class="material-symbols-outlined" style="font-size: 1.5em;">tune</p><br><p style="font-size: 1em;">Filter</p></button>
                 </div>
                 <div  id="advSearchBox" class="modal">
                     <div id="modalBg" class="modal-background"></div>
+
+                    <!-- MODAL CHECKBOXES - DOWN -->
                     <div class="modal-content has-background-light" style="padding: 20px">
                         <input type="checkbox" id="phenotypesCB" checked> Phenotypes<br>
                         <input type="checkbox" id="publicationsCB" checked> Publications <br>
@@ -47,26 +59,39 @@
                         <input type="checkbox" id="blastCB" checked> Blast Sequence <br>
                         <input type="checkbox" id="interactionsCB" checked> Interactions <br>
                         <button id="closeBtn" class="modal-close is-large" aria-label="close"></button>
+                        <!-- MODAL CHECKBOXES - UP -->
+
                     </div>                   
                 </div>
             </form>
             <div id="table-of-contents" class="box">
+                
+                
+                <!-- TABLE OF CONTENTS - DOWN-->
                 <table>
                     <th>Table of Contents</th>
                     <tr><td id="summaryTC" class="">Summary</td></tr>
                     <tr><td id="phenotypesTC" class="">Phenotypes</td></tr>
                     <tr><td id="publicationsTC" class="">Publications</td></tr>
                     <tr><td id="expressionTC" class="">Expression Patterns</td></tr>
-                    <tr><td id="aaTC" class="hidden">Aminoacid Sequence</td></tr>
-                    <tr><td id="blastTC" class="hidden">Blast sequence</td></tr>
-                    <tr><td id="interactionsTC" class="hidden">Interactions</td></tr>
+                    <tr><td id="aaTC" >Aminoacid Sequence</td></tr>
+                    <tr><td id="blastTC" >Blast sequence</td></tr>
+                    <tr><td id="interactionsTC" >Interactions</td></tr>
                 </table>
+                <!-- TABLE OF CONTENTS - UP -->
+
+
             </div>
         </aside>
         <section id="mainSection" class=" column" style="height: calc(100vh - 2rem); overflow-y: auto;">
             <div id="summaryBox" class="box">
                 <img src="#" id="pdbImg" style="width: 100px; height: 130px; float: right;">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Summary</h2>
+
+
+                <!-- MAIN SECTION OF THE PAGE -->
+
+                <!-- CARD 1 -->
                 <div style="padding-left: 20px;">
                     <span style="font-weight: bold;">Gene name: </span>
                     <span id="geneNameDisplay"></span><br>
@@ -80,74 +105,53 @@
                     <span id="bsDisplay"></span>
                 </div>
             </div>
+
+            <!-- CARD 2 -->
             <div id="phenotypesBox" class="box">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Phenotypes Associated:</h2>
                 <div style="padding-left: 20px;">                
-                <ul>
-                    <li>Disease 1</li>
-                    <li>Disease 2</li>
-                    <li>Phenotype 3</li>
-                    <li>Disease ...</li>
-                </ul></div>
+                    <ul ID="phenotypesList"></ul>
+                </div>           
             </div>
+
+            <!-- CARD 3 -->
             <div id="publicationsBox" class="box">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Recent Articles:</h2>
                 <div style="padding-left: 20px;">
                     <ol id="pubsList"></ol>
-                </div>
+                </div>           
             </div>
+
+            <!-- CARD 4 -->
             <div id="expressionBox" class="box">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Expression Patterns</h2>
                 <div style="padding-left: 20px;">
-                    <ul>
-                        <li>PubMed article 1</li>
-                        <li>PubMed article 2</li>
-                        <li>PubMed article 3</li>
+                    <ul id="expressionList">
                     </ul>
                 </div>
             </div>
-            <div id="aaBox" class="box hidden">
+
+            <!-- CARD 5 -->
+            <div id="aaBox" class="box ">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Aminoacid Sequence:</h2>
                 <div style="padding-left: 20px;">
-                    <p id="aaText" style="overflow-wrap: break-word;">MTKYNKLLA...</p>
+                    <p id="aaText" class="long-word">MTKYNKLLA...</p>
                 </div>
             </div>
-            <div id="blastBox" class="box hidden">
+
+            <!-- CARD 6 -->
+            <div id="blastBox" class="box ">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Blast Sequence</h2>
                 <div style="padding-left: 20px;">
                     <p>ACTTTAGCTAGCG....</p>
                 </div>
             </div>
-            <div id="interactionsBox" class="box hidden">
+
+            <!-- CARD 7 -->
+            <div id="interactionsBox" class="box ">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Interactions</h2>
                 <div style="padding-left: 20px;">
-                    <table style="width: 100%">
-                        <tr style="width: 100%">
-                            <th style="width: 20%">Interaction</th>
-                            <th style="width: 50%">Description</th>
-                            <th style="width: 30%">Source</th>
-                        </tr>
-                        <tr style="width: 100%">
-                            <td style="width: 20%">XYZ</td>
-                            <td style="width: 50%">... ... ...</td>
-                            <td style="width: 30%">BIND</td>
-                        </tr>
-                        <tr style="width: 100%">
-                            <td style="width: 20%">ABC</td>
-                            <td style="width: 50%">... ... ...</td>
-                            <td style="width: 30%">BIND</td>
-                        </tr>
-                        <tr style="width: 100%">
-                            <td style="width: 20%">DEF</td>
-                            <td style="width: 50%">... ... ...</td>
-                            <td style="width: 30%">BIND</td>
-                        </tr>
-                        <tr style="width: 100%">
-                            <td style="width: 20%">GHI</td>
-                            <td style="width: 50%">... ... ...</td>
-                            <td style="width: 30%">BIND</td>
-                        </tr>
-                    </table>
+                    <ul style="width: 100%;" id="interactionsList"></ul>
                 </div>
             </div>
         </section>
