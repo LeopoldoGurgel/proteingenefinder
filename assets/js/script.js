@@ -50,8 +50,25 @@ function fetchAccessionID(geneName, speciesName) {
 //get PubMed articles
 function getPubMedArticles(ID, species) {
     fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=science[journal]+AND+${ID}+AND+${species}&retmax=5&retmode=json`)
-        .then(function (response) {
-            return response.json();
+
+    .then(function (response) {
+        return response.json();
+    })
+    .then(function (data) {
+        console.log(data)
+        data.esearchresult.idlist.forEach(pmid => {
+            fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                var articleTitle = data.result[pmid].title
+                console.log(articleTitle);
+                var articleLI = $("<li>");
+                articleLI.text(articleTitle);
+                $("#pubsList").append(articleLI);
+            })
+          
         })
         .then(function (data) {
             data.esearchresult.idlist.forEach(pmid => {
