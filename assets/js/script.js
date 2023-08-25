@@ -78,8 +78,6 @@ function getPubMedArticles(ID, species) {
                     authorsArray.push(item.name + ", ");                   
                     })
 
-
-
                 for (var i =0; i < authorsArray.length; i++) {
                     var nameIndex = authorsArray[i];
                     var nameSpan = $("<span>");
@@ -171,7 +169,8 @@ function getUniProtInfo(ID) {
 
             //card 7 
             var subUnitInteractions = data.comments[0].texts[0].value
-            console.log(subUnitInteractions);
+            var subUnitArray = data.comments[0].texts[0].value.split(". ");
+            console.log(subUnitArray);
             $("#aaText").text(proteinSequence);
         });
 }
