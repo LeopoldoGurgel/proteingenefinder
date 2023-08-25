@@ -63,10 +63,40 @@ function getPubMedArticles(ID, species) {
             })
             .then(function (data) {
                 var articleTitle = data.result[pmid].title
-                console.log(articleTitle);
+                console.log(data);               
                 var articleLI = $("<li>");
-                articleLI.text(articleTitle);
                 $("#pubsList").append(articleLI);
+                var articleLink = $("<a>");
+                articleLink.href = "https://pubmed.ncbi.nlm.nih.gov/${pmid}";
+                articleLink.text(articleTitle);
+                articleLI.append(articleLink);
+
+                var authorsLine = $("<p>");
+                var authorsArray = [];
+
+                data.result[pmid].authors.forEach(item => {                    
+                    authorsArray.push(item.name + ", ");                   
+                    })
+
+
+
+                for (var i =0; i < authorsArray.length; i++) {
+                    var nameIndex = authorsArray[i];
+                    var nameSpan = $("<span>");
+                    nameSpan.text(nameIndex);
+                    authorsLine.append(nameSpan);
+                }
+
+                console.log(authorsArray);
+
+
+                $("#pubsList").append(authorsLine);
+
+                // var articleAuthors = $("<p>")
+                // data.result[pmid].authors.forEach(name => {
+
+                // });
+                
             })
           
         })
@@ -85,6 +115,7 @@ function getPubMedArticles(ID, species) {
                     })
             })
         });
+})
 }
 
 //get PDB Img
@@ -99,6 +130,7 @@ function getPDBImg(ID) {
             pdbImgEl.attr('src', imageUrl); // Set the src attribute of the image element
         });
 }
+
 
 //get uniprot info 
 function getUniProtInfo(ID) {
@@ -140,8 +172,10 @@ function getUniProtInfo(ID) {
             //card 7 
             var subUnitInteractions = data.comments[0].texts[0].value
             console.log(subUnitInteractions);
+            $("#aaText").text(proteinSequence);
         });
 }
+
 
 //get genbank info
 function getGenbankInfo(ID, key) {
@@ -150,11 +184,10 @@ function getGenbankInfo(ID, key) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data)
+            console.log(data);
 
-
-            var geneSummary = data.result[`${ID}`].summary
-            console.log("gene summary --> " + geneSummary)
+            var geneSummary = data.result[`${ID}`].summary;
+            console.log("gene summary --> " + geneSummary);
             $('#bsDisplay').text(geneSummary);
 
             var geneName = data.result[`${ID}`].name;
@@ -173,10 +206,8 @@ function getGenbankInfo(ID, key) {
             var geneLength = ((data.result[`${ID}`].genomicinfo[0].chrstop) - (data.result[`${ID}`].genomicinfo[0].chrstart)) / 1000
             console.log("gene length -->" + geneLength + " kb")
 
-            var geneTitle = data.result[`${ID}`].name + " (" + data.result[`${ID}`].organism.scientificname + ")"
+            var geneTitle = data.result[`${ID}`].name + " (" + data.result[`${ID}`].organism.scientificname + ")";
 
             console.log(geneTitle);
         });
 }
-
-// fetch(`https://rest.uniprot.org/uniprotkb/search?query=CFTR+AND+organism_name:human+AND+reviewed:true&fields=accession,xref_pdb,xref_ensembl&format=json&size=2`)

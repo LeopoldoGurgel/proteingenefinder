@@ -44,7 +44,7 @@
                         <input type="checkbox" id="publicationsCB" checked> Publications <br>
                         <input type="checkbox" id="expressionCB" checked> Expression Patterns <br>
                         <input type="checkbox" id="aaCB"> Aminoacid Sequence <br>
-                        <input type="checkbox" id="blustCB"> Blust Sequence <br>
+                        <input type="checkbox" id="blastCB"> Blast Sequence <br>
                         <input type="checkbox" id="interactionsCB"> Interactions <br>
                         <button id="closeBtn" class="modal-close is-large" aria-label="close"></button>
                     </div>                   
@@ -58,7 +58,7 @@
                     <tr><td id="publicationsTC" class="">Publications</td></tr>
                     <tr><td id="expressionTC" class="">Expression Patterns</td></tr>
                     <tr><td id="aaTC" class="hidden">Aminoacid Sequence</td></tr>
-                    <tr><td id="blustTC" class="hidden">Blust sequence</td></tr>
+                    <tr><td id="blastTC" class="hidden">Blast sequence</td></tr>
                     <tr><td id="interactionsTC" class="hidden">Interactions</td></tr>
                 </table>
             </div>
@@ -109,11 +109,11 @@
             <div id="aaBox" class="box hidden">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Aminoacid Sequence:</h2>
                 <div style="padding-left: 20px;">
-                    <p>MTKYNKLLA...</p>
+                    <p id="aaText">MTKYNKLLA...</p>
                 </div>
             </div>
-            <div id="blustBox" class="box hidden">
-                <h2 style="font-size: 1.5em; font-weight: bold;">Blust box</h2>
+            <div id="blastBox" class="box hidden">
+                <h2 style="font-size: 1.5em; font-weight: bold;">Blast Sequence</h2>
                 <div style="padding-left: 20px;">
                     <p>ACTTTAGCTAGCG....</p>
                 </div>
