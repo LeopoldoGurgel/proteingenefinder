@@ -19,10 +19,9 @@ function fetchAccessionID(geneName, speciesName) {
             var uniprotAccessionCode = data.results[0].primaryAccession
             var pdbID = (data.results[0].uniProtKBCrossReferences[0].id).toLowerCase();
 
-            //ALWAYS RAN
-            //get pdb image
+            //uniprot + PDB data!
+            //card 1
             getPDBImg(pdbID)
-            //retrieve uniprot info for card 1 (gene name, protein name, organism, amino acid length + basic summary)
             getUniProtCard1(uniprotAccessionCode)
 
 
@@ -34,10 +33,12 @@ function fetchAccessionID(geneName, speciesName) {
                 .then(function (data) {
                     var genbankUID = data.esearchresult.idlist;
 
-                    //ALWAYS RAN
-                    //get genbank info for card 1 
+                    //genbank data!
+                    //card 1
                     getGenbankCard1(genbankUID, NCBIAPIKey)
 
+                    //card 2
+                    getGenbankCard2(genbankUID, NCBIAPIKey)
                 });
 
 
@@ -49,58 +50,74 @@ function fetchAccessionID(geneName, speciesName) {
 
 
 
+    //get PDB Img
+    function getPDBImg(ID) {
+    fetch(`https://cdn.rcsb.org/images/structures/${ID}_assembly-1.jpeg`)
+    .then(function (response) {
+        return response.blob();
+    })
+    .then(function (blob) {
+        var imageUrl = URL.createObjectURL(blob); // Create an object URL from the Blob
+        var pdbImgEl = $('#pdbImg'); // Get the image element
+        pdbImgEl.attr('src', imageUrl); // Set the src attribute of the image element
+    });
+    }
 
-//get PDB Img
-function getPDBImg(ID) {
-fetch(`https://cdn.rcsb.org/images/structures/${ID}_assembly-1.jpeg`)
-.then(function (response) {
-    return response.blob();
-})
-.then(function (blob) {
-    var imageUrl = URL.createObjectURL(blob); // Create an object URL from the Blob
-    var pdbImgEl = $('#pdbImg'); // Get the image element
-    pdbImgEl.attr('src', imageUrl); // Set the src attribute of the image element
-});
-}
+    //get uniprot info 
+    function getUniProtCard1(accessionCode) {
+        fetch(`https://rest.uniprot.org/uniprotkb/${accessionCode}?format=json&fields=organism_name,protein_name,length,sequence&size=1`)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            console.log(data)
+            //card 1 variables
+            var proteinName = data.proteinDescription.recommendedName.fullName.value
+            var AALength = data.sequence.length;
+            console.log("amino acid length --> " + AALength)
+            console.log("protein name --> " + proteinName)
 
-//get uniprot info for card 1
-function getUniProtCard1(accessionCode) {
-    fetch(`https://rest.uniprot.org/uniprotkb/${accessionCode}?format=json&fields=organism_name,protein_name,length&size=1`)
+            //card 5
+            var proteinSequence = data.sequence.value;
+            
+            console.log("protein sequence --> " + proteinSequence)
+        });
+    }
+
+    //get genbank info for card 1
+    function getGenbankCard1(genbankID, key) {
+        fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gene&id=${genbankID}&api_key=${key}&retmode=json`)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            console.log(data)
+            
+            var geneSummary = data.result[`${genbankID}`].summary
+            console.log("gene summary --> " + geneSummary)
+            $('#bsDisplay').text(geneSummary);
+
+            var geneLocation = data.result[`${genbankID}`].maplocation
+            console.log("gene location --> chromosome " + geneLocation);
+
+            var exonCount = data.result[`${genbankID}`].genomicinfo[0].exoncount
+            console.log("exons --> " + exonCount);
+
+            var geneLength = ((data.result[`${genbankID}`].genomicinfo[0].chrstop)-(data.result[`${genbankID}`].genomicinfo[0].chrstart))/1000
+            console.log("gene length -->" + geneLength + " kb")
+
+            var geneTitle = data.result[`${genbankID}`].name + " (" + data.result[`${genbankID}`].organism.scientificname + ")"
+            console.log(geneTitle);
+        });
+    }
+
+
+//functions to get card 2 info
+function getGenbankCard2(genbankID, key) {
+    fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gene&id=${genbankID}&api_key=${key}&report=expression&retmode=json`)
     .then(function (response) {
         return response.json();
     })
     .then(function (data) {
-        console.log(data)
-        var proteinName = data.proteinDescription.recommendedName.fullName.value
-        var AALength = data.sequence.length;
-        console.log("amino acid length --> " + AALength)
-        console.log("protein name --> " + proteinName)
-    });
-}
-
-function getGenbankCard1(genbankID, key) {
-    fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gene&id=${genbankID}&api_key=${key}&retmode=json`)
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (data) {
-        console.log(data)
-        
-        var geneSummary = data.result[`${genbankID}`].summary
-        console.log("gene summary --> " + geneSummary)
-        $('#bsDisplay').text(geneSummary);
-
-        var geneLocation = data.result[`${genbankID}`].maplocation
-        console.log("gene location --> " + geneLocation);
-
-        var exonCount = data.result[`${genbankID}`].genomicinfo[0].exoncount
-        console.log("exons --> " + exonCount);
-
-        var geneLength = ((data.result[`${genbankID}`].genomicinfo[0].chrstop)-(data.result[`${genbankID}`].genomicinfo[0].chrstart))/1000
-        console.log("gene length -->" + geneLength + " kb")
-
-        var geneTitle = data.result[`${genbankID}`].name + " (" + data.result[`${genbankID}`].organism.scientificname + ")"
-        console.log(geneTitle);
-    });
-}
-
+        console.log(data) })
+};
