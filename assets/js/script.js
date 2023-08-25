@@ -74,7 +74,9 @@ function getUniProtCard1(accessionCode) {
         var proteinName = data.proteinDescription.recommendedName.fullName.value
         var AALength = data.sequence.length;
         console.log("amino acid length --> " + AALength)
+        $("#aaDisplay").text(AALength);
         console.log("protein name --> " + proteinName)
+        $("#proteinDisplay").text(proteinName);
     });
 }
 
@@ -87,8 +89,14 @@ function getGenbankCard1(genbankID, key) {
         console.log(data)
         
         var geneSummary = data.result[`${genbankID}`].summary
-        console.log("gene summary --> " + geneSummary)
         $('#bsDisplay').text(geneSummary);
+
+        var geneName = data.result[`${genbankID}`].name;
+        $("#geneNameDisplay").text(geneName);
+
+        var organismCommon = data.result[`${genbankID}`].organism.commonname;
+        var organismScientific = data.result[`${genbankID}`].organism.scientificname;
+        $("#organismDisplay").text(organismCommon + " (" + organismScientific + ")"); 
 
         var geneLocation = data.result[`${genbankID}`].maplocation
         console.log("gene location --> " + geneLocation);
