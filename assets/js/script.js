@@ -75,7 +75,7 @@ function getPubMedArticles(ID, species) {
                 var authorsArray = [];
 
                 data.result[pmid].authors.forEach(item => {                    
-                    authorsArray.push(item.name);                   
+                    authorsArray.push(item.name + ", ");                   
                     })
 
 
@@ -115,6 +115,7 @@ function getPubMedArticles(ID, species) {
                     })
             })
         });
+})
 }
 
 //get PDB Img
@@ -183,11 +184,10 @@ function getGenbankInfo(ID, key) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data)
+            console.log(data);
 
-
-            var geneSummary = data.result[`${ID}`].summary
-            console.log("gene summary --> " + geneSummary)
+            var geneSummary = data.result[`${ID}`].summary;
+            console.log("gene summary --> " + geneSummary);
             $('#bsDisplay').text(geneSummary);
 
             var geneName = data.result[`${ID}`].name;
@@ -206,13 +206,8 @@ function getGenbankInfo(ID, key) {
             var geneLength = ((data.result[`${ID}`].genomicinfo[0].chrstop) - (data.result[`${ID}`].genomicinfo[0].chrstart)) / 1000
             console.log("gene length -->" + geneLength + " kb")
 
-            var geneTitle = data.result[`${ID}`].name + " (" + data.result[`${ID}`].organism.scientificname + ")"
+            var geneTitle = data.result[`${ID}`].name + " (" + data.result[`${ID}`].organism.scientificname + ")";
 
             console.log(geneTitle);
         });
 }
-
-
-
-
-// fetch(`https://rest.uniprot.org/uniprotkb/search?query=CFTR+AND+organism_name:human+AND+reviewed:true&fields=accession,xref_pdb,xref_ensembl&format=json&size=2`)
