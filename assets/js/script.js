@@ -63,6 +63,9 @@ function getPubMedArticles(ID, species) {
             .then(function (data) {
                 var articleTitle = data.result[pmid].title
                 console.log(articleTitle);
+                var articleLI = $("<li>");
+                articleLI.text(articleTitle);
+                $("#pubsList").append(articleLI);
             })
         })
     });
