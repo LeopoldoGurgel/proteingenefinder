@@ -93,7 +93,9 @@ function getUniProtInfo(ID) {
             var proteinName = data.proteinDescription.recommendedName.fullName.value
             var AALength = data.sequence.length;
             console.log("amino acid length --> " + AALength)
+            $("#aaDisplay").text(AALength);
             console.log("protein name --> " + proteinName)
+            $("#proteinDisplay").text(proteinName);
 
             //card 3
             var expressionPatterns = data.comments[1].texts[0].value
@@ -114,10 +116,18 @@ function getGenbankInfo(ID, key) {
         .then(function (data) {
             console.log(data)
 
+
             var geneSummary = data.result[`${ID}`].summary
             console.log("gene summary --> " + geneSummary)
             $('#bsDisplay').text(geneSummary);
 
+            var geneName = data.result[`${ID}`].name;
+            $("#geneNameDisplay").text(geneName);
+
+            var organismCommon = data.result[`${ID}`].organism.commonname;
+            var organismScientific = data.result[`${ID}`].organism.scientificname;
+            $("#organismDisplay").text(organismCommon + " (" + organismScientific + ")"); 
+    
             var geneLocation = data.result[`${ID}`].maplocation
             console.log("gene location --> chromosome " + geneLocation);
 
@@ -128,6 +138,7 @@ function getGenbankInfo(ID, key) {
             console.log("gene length -->" + geneLength + " kb")
 
             var geneTitle = data.result[`${ID}`].name + " (" + data.result[`${ID}`].organism.scientificname + ")"
+
             console.log(geneTitle);
         });
 }
