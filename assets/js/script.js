@@ -28,7 +28,7 @@ function fetchAccessionID(geneName, speciesName) {
             getUniProtInfo(uniprotAccessionCode)
 
             //get pubmed links
-            getPubMedArticles(returnedGeneName, speciesName)
+            getPubMedArticles(returnedGeneName, speciesName, NCBIAPIKey)
 
 
             //get genbank UID and info
@@ -72,11 +72,20 @@ function getPubMedArticles(ID, species) {
                 articleLI.append(articleLink);
 
                 var authorsLine = $("<p>");
+                authorsLine.text("Authors: ")
                 var authorsArray = [];
 
-                data.result[pmid].authors.forEach(item => {                    
-                    authorsArray.push(item.name + ", ");                   
-                    })
+                data.result[pmid].authors.forEach((item, index) => {
+                    authorsArray.push(item.name);
+                    
+                    if (index < data.result[pmid].authors.length - 1) {
+                        authorsArray.push(", ");
+                    }
+                });
+                
+                var authorsString = authorsArray.join("");
+
+
 
                 for (var i =0; i < authorsArray.length; i++) {
                     var nameIndex = authorsArray[i];
@@ -98,23 +107,7 @@ function getPubMedArticles(ID, species) {
             })
           
         })
-        .then(function (data) {
-            data.esearchresult.idlist.forEach(pmid => {
-                fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`)
-                    .then(function (response) {
-                        return response.json();
-                    })
-                    .then(function (data) {
-                        console.log(data)
-                        var articleTitle = data.result[pmid].title
-                        console.log(articleTitle);
-                        var articleLink = `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`
-                        console.log(articleLink)
-                    })
-            })
-        });
-})
-}
+})}
 
 //get PDB Img
 function getPDBImg(ID) {
@@ -128,7 +121,6 @@ function getPDBImg(ID) {
             pdbImgEl.attr('src', imageUrl); // Set the src attribute of the image element
         });
 }
-
 
 //get uniprot info 
 function getUniProtInfo(ID) {
@@ -183,7 +175,7 @@ function getUniProtInfo(ID) {
 
             //card 7 
             var subUnitInteractions = data.comments[0].texts[0].value
-            var subUnitArray = data.comments[0].texts[0].value.split(". ");
+            var subUnitArray = subUnitInteractions.split('. ');
                         
             for (var i = 0; i < subUnitArray.length; i++) {
                 var newLI = $("<li>");
@@ -191,9 +183,9 @@ function getUniProtInfo(ID) {
                 newLI.addClass("long-word");
                 $("#interactionsList").append(newLI);
             }
+
         });
 }
-
 
 //get genbank info
 function getGenbankInfo(ID, key) {
@@ -202,7 +194,8 @@ function getGenbankInfo(ID, key) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data);
+            console.log(data)
+
 
             var geneSummary = data.result[`${ID}`].summary;
             $('#bsDisplay').text(geneSummary);
@@ -223,8 +216,10 @@ function getGenbankInfo(ID, key) {
             var geneLength = ((data.result[`${ID}`].genomicinfo[0].chrstop) - (data.result[`${ID}`].genomicinfo[0].chrstart)) / 1000
             console.log("gene length -->" + geneLength + " kb")
 
-            var geneTitle = data.result[`${ID}`].name + " (" + data.result[`${ID}`].organism.scientificname + ")";
+            var geneTitle = data.result[`${ID}`].name + " (" + data.result[`${ID}`].organism.scientificname + ")"
 
             console.log(geneTitle);
         });
 }
+
+// fetch(`https://rest.uniprot.org/uniprotkb/search?query=CFTR+AND+organism_name:human+AND+reviewed:true&fields=accession,xref_pdb,xref_ensembl&format=json&size=2`)
