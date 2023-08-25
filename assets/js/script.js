@@ -50,6 +50,7 @@ function fetchAccessionID(geneName, speciesName) {
 //get PubMed articles
 function getPubMedArticles(ID, species) {
     fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=science[journal]+AND+${ID}+AND+${species}&retmax=5&retmode=json`)
+
     .then(function (response) {
         return response.json();
     })
@@ -97,8 +98,23 @@ function getPubMedArticles(ID, species) {
                 // });
                 
             })
+          
         })
-    });
+        .then(function (data) {
+            data.esearchresult.idlist.forEach(pmid => {
+                fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`)
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        console.log(data)
+                        var articleTitle = data.result[pmid].title
+                        console.log(articleTitle);
+                        var articleLink = `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`
+                        console.log(articleLink)
+                    })
+            })
+        });
 }
 
 //get PDB Img
@@ -117,12 +133,13 @@ function getPDBImg(ID) {
 
 //get uniprot info 
 function getUniProtInfo(ID) {
-    fetch(`https://rest.uniprot.org/uniprotkb/${ID}?format=json&fields=organism_name,protein_name,length,sequence,cc_interaction,cc_tissue_specificity,&size=1`)
+    fetch(`https://rest.uniprot.org/uniprotkb/${ID}?format=json&fields=organism_name,protein_name,length,sequence,cc_disease,cc_subunit,cc_tissue_specificity,&size=1`)
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
             console.log(data)
+
             //card 1 variables
             var proteinName = data.proteinDescription.recommendedName.fullName.value
             var AALength = data.sequence.length;
@@ -131,6 +148,18 @@ function getUniProtInfo(ID) {
             console.log("protein name --> " + proteinName)
             $("#proteinDisplay").text(proteinName);
 
+            //card 2
+            var diseaseInfoArray = (data.comments).filter(item => item.commentType === 'DISEASE')
+            console.log(diseaseInfoArray)
+
+
+            diseaseInfoArray.forEach(item => {
+                var diseaseName = item.disease.diseaseId
+                var diseaseDescription = item.disease.description
+                console.log(diseaseName + ": " + diseaseDescription)
+            })
+
+
             //card 3
             var expressionPatterns = data.comments[1].texts[0].value
             console.log("expression patterns --> :" + expressionPatterns)
@@ -138,6 +167,10 @@ function getUniProtInfo(ID) {
             //card 5
             var proteinSequence = data.sequence.value;
             console.log("protein sequence --> " + proteinSequence)
+
+            //card 7 
+            var subUnitInteractions = data.comments[0].texts[0].value
+            console.log(subUnitInteractions);
             $("#aaText").text(proteinSequence);
         });
 }
@@ -162,8 +195,8 @@ function getGenbankInfo(ID, key) {
 
             var organismCommon = data.result[`${ID}`].organism.commonname;
             var organismScientific = data.result[`${ID}`].organism.scientificname;
-            $("#organismDisplay").text(organismCommon + " (" + organismScientific + ")"); 
-    
+            $("#organismDisplay").text(organismCommon + " (" + organismScientific + ")");
+
             var geneLocation = data.result[`${ID}`].maplocation
             console.log("gene location --> chromosome " + geneLocation);
 
