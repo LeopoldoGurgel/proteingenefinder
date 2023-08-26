@@ -60,6 +60,59 @@ function getPubMedArticles(ID, species) {
             fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`)
             .then(function (response) {
                 return response.json();
+
+
+            })
+            .then(function (data) {
+                var articleTitle = data.result[pmid].title
+                console.log(data);               
+                var articleLI = $("<li>");
+                $("#pubsList").append(articleLI);
+                var articleLink = $("<a>");
+                articleLink.href = "https://pubmed.ncbi.nlm.nih.gov/${pmid}";
+                articleLink.text(articleTitle);
+                articleLI.append(articleLink);
+
+                var authorsLine = $("<p>");
+                var authorsArray = [];
+
+                data.result[pmid].authors.forEach(item => {                    
+                    authorsArray.push(item.name + ", ");                   
+                    })
+
+                for (var i =0; i < authorsArray.length; i++) {
+                    var nameIndex = authorsArray[i];
+                    var nameSpan = $("<span>");
+                    nameSpan.text(nameIndex);
+                    authorsLine.append(nameSpan);
+                }
+
+                console.log(authorsArray);
+
+
+                $("#pubsList").append(authorsLine);
+
+                // var articleAuthors = $("<p>")
+                // data.result[pmid].authors.forEach(name => {
+
+                // });
+                
+            })          
+        })
+        .then(function (data) {
+            data.esearchresult.idlist.forEach(pmid => {
+                fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`)
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        console.log(data)
+                        var articleTitle = data.result[pmid].title
+                        console.log(articleTitle);
+                        var articleLink = `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`
+                        console.log(articleLink)
+                    })
+
             })
             .then(function (data) {
                 var articleTitle = data.result[pmid].title
@@ -175,6 +228,7 @@ function getUniProtInfo(ID) {
 
             //card 7 
             var subUnitInteractions = data.comments[0].texts[0].value
+
             var subUnitArray = subUnitInteractions.split('. ');
                         
             for (var i = 0; i < subUnitArray.length; i++) {
@@ -183,6 +237,11 @@ function getUniProtInfo(ID) {
                 newLI.addClass("long-word");
                 $("#interactionsList").append(newLI);
             }
+
+
+            var subUnitArray = data.comments[0].texts[0].value.split(". ");
+            console.log(subUnitArray);
+            $("#aaText").text(proteinSequence);
 
         });
 }
