@@ -28,14 +28,16 @@
         <aside class="column is-narrow is-3" style="height: calc(100vh - 2rem)">
             <form name="geneSearch" class="box">
 
+
+                <!-- SEARCH INPUT SECTION -->
                 <div id="line1" style="padding:5px">
                     <input type="text" id="geneInput" class=""  style="width: 73%; height: 40px; margin-botton: 5px">
-                    <input type="submit" value="Search" class="button is-primary is-tiny" style="width: 23%">
+                    <input id="submitBtn" type="submit" value="Search" class="button is-primary is-tiny" style="width: 23%">
                 </div>
                 <div id="line2" style="padding:5px">
 
 
-                    <!-- DROPDOWN MENU -->
+                    <!-- SPECIES SELECTION DROPDOWN INPUT -->
                     <select id="speciesMenu" class="select is-medium"  style="width: 73%; font-size: 1em;">                        
                     <option value="human">Human (homosapiens)</option>
                     <option>option 2</option>
@@ -92,6 +94,7 @@
                 <!-- MAIN SECTION OF THE PAGE -->
 
                 <!-- CARD 1 -->
+                <div id="summaryContent">
                 <div style="padding-left: 20px;">
                     <span style="font-weight: bold;">Gene name: </span>
                     <span id="geneNameDisplay"></span><br>
@@ -104,6 +107,7 @@
                     <span style="font-weight: bold;">Basic summary: </span>
                     <span id="bsDisplay"></span>
                 </div>
+            </div>
             </div>
 
             <!-- CARD 2 -->
