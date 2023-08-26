@@ -58,6 +58,7 @@ function fetchAccessionID(geneName, speciesName) {
         .catch(function(error){
             $("#mainSection").html("<h3 style='font-size: 2em; font-weight: bold'>" + error);
         });
+        card4();
 }
 
 //get PubMed articles
@@ -69,6 +70,11 @@ function getPubMedArticles(ID, species) {
     })
     .then(function (data) {
         console.log(data)
+
+        if(!data.esearchresult || data.esearchresult.length === 0) {
+            throw new Error("We couldn't find articles related to your search in our database.")
+        }
+
         data.esearchresult.idlist.forEach(pmid => {
             fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`)
             .then(function (response) {
@@ -197,6 +203,17 @@ function getUniProtInfo(ID) {
         .then(function (data) {
             console.log(data)
 
+            // organizes the data
+            const parsedData = data.comments.map(comment => ({
+                commentType: comment.commentType,
+                texts: comment.texts,
+                evidences: comment.evidences,
+                value: comment.value,
+            }));
+        
+            console.log(parsedData);
+
+
             //card 1 variables
 
             var proteinName = data.proteinDescription.recommendedName.fullName.value
@@ -220,27 +237,31 @@ function getUniProtInfo(ID) {
             })
 
 
-            //card 3
+            //card 4
             // the value saved in expressionPatterns comes from the API as one Big Chunk
             // of words string. So It was broken down into an array of smaller sentences
             // with the split method.
             // The for loop creates a <li> for each index in that array
             // and append to the proper <ul> in the HTML.
-            var expressionPatterns = data.comments[1].texts[0].value
+
+
+            function card4() {
+                var expressionPatterns = data.comments[1].texts[0].value
             var expressionPatternsArray = expressionPatterns.split(". ");
             
-
             for (var i = 0; i < expressionPatternsArray.length; i++) {
                 var newLI = $("<li>");
                 newLI.text(expressionPatternsArray[i]);
                 newLI.addClass("long-word");
                 $("#expressionList").append(newLI);
             }
+        }
 
 
             //card 5
             var proteinSequence = data.sequence.value;
             $("#aaText").text(proteinSequence);
+            console.log(proteinSequence);
 
             //card 7 
             var subUnitInteractions = data.comments[0].texts[0].value
