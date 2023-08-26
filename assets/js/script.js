@@ -1,21 +1,32 @@
 // var userGene = $('#geneInput').val
 // var userSpecies = $('#speciesMenu').val
 
-
 var NCBIAPIKey = 'd019ce82781c44b8ac9d2547bbc391e9a908';
-var userGene = 'CFTR'
-var userSpecies = 'homo sapiens'
 
+$("#submitBtn").on("click", function(event){
+    event.preventDefault();
 
-fetchAccessionID(userGene, userSpecies)
+    var userGene = $("#geneInput").val();
+    var userSpecies = 'homo sapiens'
+
+    fetchAccessionID(userGene, userSpecies)
+});
 
 //gets accession number and PDB id of user search
 function fetchAccessionID(geneName, speciesName) {
     fetch(`https://rest.uniprot.org/uniprotkb/search?query=${geneName}+AND+organism_name:${speciesName}+AND+reviewed:true&fields=accession,xref_pdb,gene_names&format=json&size=2`)
         .then(function (response) {
+            if(!response.ok){
+                throw new Error("Something is wrong with our database. Try again Later.")
+            }    
             return response.json();
         })
         .then(function (data) {
+            console.log(data)
+            if(!data.results || data.results.length ===0){
+                throw new Error("We couldn't find anything about what you are looking for.")
+            }
+            
             var uniprotAccessionCode = data.results[0].primaryAccession
             console.log(data)
             var pdbID = (data.results[0].uniProtKBCrossReferences[0].id).toLowerCase();
@@ -23,13 +34,12 @@ function fetchAccessionID(geneName, speciesName) {
             console.log(returnedGeneName, pdbID)
 
             //uniprot + PDB data!
-            //card 1
-            getPDBImg(pdbID)
+            //card 1   
+            getPDBImg(pdbID) 
             getUniProtInfo(uniprotAccessionCode)
 
             //get pubmed links
             getPubMedArticles(returnedGeneName, speciesName, NCBIAPIKey)
-
 
             //get genbank UID and info
             fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=${uniprotAccessionCode}&api_key=${NCBIAPIKey}&retmode=json&retmax=1`)
@@ -44,6 +54,9 @@ function fetchAccessionID(geneName, speciesName) {
                     getGenbankInfo(genbankUID, NCBIAPIKey)
 
                 });
+        })
+        .catch(function(error){
+            $("#mainSection").html("<h3 style='font-size: 2em; font-weight: bold'>" + error);
         });
 }
 
@@ -185,10 +198,12 @@ function getUniProtInfo(ID) {
             console.log(data)
 
             //card 1 variables
+
             var proteinName = data.proteinDescription.recommendedName.fullName.value
             var AALength = data.sequence.length;
             $("#aaDisplay").text(AALength);
             $("#proteinDisplay").text(proteinName);
+
 
             //card 2
             var diseaseInfoArray = (data.comments).filter(item => item.commentType === 'DISEASE')
@@ -214,6 +229,7 @@ function getUniProtInfo(ID) {
             var expressionPatterns = data.comments[1].texts[0].value
             var expressionPatternsArray = expressionPatterns.split(". ");
             
+
             for (var i = 0; i < expressionPatternsArray.length; i++) {
                 var newLI = $("<li>");
                 newLI.text(expressionPatternsArray[i]);
