@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 </head>
-<body class="has-background-white-ter">
+<body class="has-background-white-ter" style="height: 100vh">
     <section class="section">
     <header class="container">
         <!-- <img src="logo.img"> ARE WE ADDING ONE? -->
@@ -25,7 +25,7 @@
     </header>
     </section>
     <main class="columns">
-        <aside class="column is-narrow is-3" style="height: calc(100vh - 2rem)">
+        <aside class="column is-narrow is-3" style="height: calc(100vh - 10rem); overflow-y: auto;">
             <form name="geneSearch" class="box">
 
 
@@ -85,7 +85,7 @@
 
             </div>
         </aside>
-        <section id="mainSection" class=" column" style="height: calc(100vh - 2rem); overflow-y: auto;">
+        <section id="mainSection" class=" column" style="height: calc(100vh - 10rem); overflow-y: auto;">
             <div id="summaryBox" class="box">
                 <img src="#" id="pdbImg" style="width: 100px; height: 130px; float: right;">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Summary</h2>
@@ -113,7 +113,7 @@
             <!-- CARD 2 -->
             <div id="phenotypesBox" class="box">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Phenotypes Associated:</h2>
-                <div style="padding-left: 20px;">                
+                <div id="phenotypesContent" style="padding-left: 20px;">                
                     <ul ID="phenotypesList"></ul>
                 </div>           
             </div>
@@ -129,7 +129,7 @@
             <!-- CARD 4 -->
             <div id="expressionBox" class="box">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Expression Patterns</h2>
-                <div style="padding-left: 20px;">
+                <div id="expressionContent" style="padding-left: 20px;">
                     <ul id="expressionList">
                     </ul>
                 </div>
@@ -138,10 +138,12 @@
             <!-- CARD 5 -->
             <div id="aaBox" class="box">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Aminoacid Sequence:</h2>
+
                 <div style="padding-left: 20px; height: 200px; overflow: auto;">
 
 
                     <p id="aaText" style="overflow-wrap: break-word;">MTKYNKLLA...</p>
+
 
                 </div>
             </div>
@@ -150,14 +152,14 @@
             <div id="blastBox" class="box ">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Blast Sequence</h2>
                 <div style="padding-left: 20px; height: 200px; overflow: auto;">
-                    <p>ACTTTAGCTAGCG....</p>
+                    <p style='font-size: 1.2em; font-weight: bold'>Sorry. We have no idea of how to bring this up to you!</p>
                 </div>
             </div>
 
             <!-- CARD 7 -->
             <div id="interactionsBox" class="box ">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Interactions</h2>
-                <div style="padding-left: 20px;">
+                <div id="interactionsContent" style="padding-left: 20px;">
                     <ul style="width: 100%;" id="interactionsList"></ul>
                 </div>
             </div>
