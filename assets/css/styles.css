@@ -240,7 +240,8 @@ h6 {
   font-weight: normal; }
 
 ul {
-  list-style: none; }
+  list-style-type: disc; 
+  pedding-left: 20px;}
 
 button,
 input,
@@ -7878,6 +7879,10 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 
   .hidden {
     display: none;
+  }
+
+  .long-word {
+    word-wrap: break-word;
   }
 
 /* adv serach added */

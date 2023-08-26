@@ -60,6 +60,8 @@ function getPubMedArticles(ID, species) {
             fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`)
             .then(function (response) {
                 return response.json();
+
+
             })
             .then(function (data) {
                 var articleTitle = data.result[pmid].title
@@ -110,9 +112,55 @@ function getPubMedArticles(ID, species) {
                         var articleLink = `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`
                         console.log(articleLink)
                     })
+
             })
-        });
-}
+            .then(function (data) {
+                var articleTitle = data.result[pmid].title
+                console.log(data);               
+                var articleLI = $("<li>");
+                $("#pubsList").append(articleLI);
+                var articleLink = $("<a>");
+                articleLink.href = "https://pubmed.ncbi.nlm.nih.gov/${pmid}";
+                articleLink.text(articleTitle);
+                articleLI.append(articleLink);
+
+                var authorsLine = $("<p>");
+                authorsLine.text("Authors: ")
+                var authorsArray = [];
+
+                data.result[pmid].authors.forEach((item, index) => {
+                    authorsArray.push(item.name);
+                    
+                    if (index < data.result[pmid].authors.length - 1) {
+                        authorsArray.push(", ");
+                    }
+                });
+                
+                var authorsString = authorsArray.join("");
+
+
+
+                for (var i =0; i < authorsArray.length; i++) {
+                    var nameIndex = authorsArray[i];
+                    var nameSpan = $("<span>");
+                    nameSpan.text(nameIndex);
+                    authorsLine.append(nameSpan);
+                }
+
+                console.log(authorsArray);
+
+
+                $("#pubsList").append(authorsLine);
+
+                // var articleAuthors = $("<p>")
+                // data.result[pmid].authors.forEach(name => {
+
+                // });
+                
+            })
+          
+        })
+})}
 
 //get PDB Img
 function getPDBImg(ID) {
@@ -139,9 +187,7 @@ function getUniProtInfo(ID) {
             //card 1 variables
             var proteinName = data.proteinDescription.recommendedName.fullName.value
             var AALength = data.sequence.length;
-            console.log("amino acid length --> " + AALength)
             $("#aaDisplay").text(AALength);
-            console.log("protein name --> " + proteinName)
             $("#proteinDisplay").text(proteinName);
 
             //card 2
@@ -153,22 +199,50 @@ function getUniProtInfo(ID) {
                 var diseaseName = item.disease.diseaseId
                 var diseaseDescription = item.disease.description
                 console.log(diseaseName + ": " + diseaseDescription)
+                diseaseLI = $("<li>");
+                diseaseLI.text(diseaseName + ": " + diseaseDescription);
+                $("#phenotypesList").append(diseaseLI);
             })
 
 
             //card 3
+            // the value saved in expressionPatterns comes from the API as one Big Chunk
+            // of words string. So It was broken down into an array of smaller sentences
+            // with the split method.
+            // The for loop creates a <li> for each index in that array
+            // and append to the proper <ul> in the HTML.
             var expressionPatterns = data.comments[1].texts[0].value
-            console.log("expression patterns --> :" + expressionPatterns)
+            var expressionPatternsArray = expressionPatterns.split(". ");
+            
+            for (var i = 0; i < expressionPatternsArray.length; i++) {
+                var newLI = $("<li>");
+                newLI.text(expressionPatternsArray[i]);
+                newLI.addClass("long-word");
+                $("#expressionList").append(newLI);
+            }
+
 
             //card 5
             var proteinSequence = data.sequence.value;
-            console.log("protein sequence --> " + proteinSequence)
+            $("#aaText").text(proteinSequence);
 
             //card 7 
             var subUnitInteractions = data.comments[0].texts[0].value
+
+            var subUnitArray = subUnitInteractions.split('. ');
+                        
+            for (var i = 0; i < subUnitArray.length; i++) {
+                var newLI = $("<li>");
+                newLI.text(subUnitArray[i]);
+                newLI.addClass("long-word");
+                $("#interactionsList").append(newLI);
+            }
+
+
             var subUnitArray = data.comments[0].texts[0].value.split(". ");
             console.log(subUnitArray);
             $("#aaText").text(proteinSequence);
+
         });
 }
 
@@ -182,8 +256,7 @@ function getGenbankInfo(ID, key) {
             console.log(data)
 
 
-            var geneSummary = data.result[`${ID}`].summary
-            console.log("gene summary --> " + geneSummary)
+            var geneSummary = data.result[`${ID}`].summary;
             $('#bsDisplay').text(geneSummary);
 
             var geneName = data.result[`${ID}`].name;
