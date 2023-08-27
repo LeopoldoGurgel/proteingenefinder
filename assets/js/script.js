@@ -3,11 +3,12 @@
 
 var NCBIAPIKey = 'd019ce82781c44b8ac9d2547bbc391e9a908';
 
-$("#submitBtn").on("click", function(event){
+$("#submitBtn").on("click", function (event) {
+    $('#table-of-contents').removeClass('initalHide')
     event.preventDefault();
 
     var userGene = $("#geneInput").val();
-    var userSpecies = 'homo sapiens'
+    var userSpecies = $("#speciesMenu").val();
 
     fetchAccessionID(userGene, userSpecies)
 });
@@ -16,47 +17,50 @@ $("#submitBtn").on("click", function(event){
 function fetchAccessionID(geneName, speciesName) {
     fetch(`https://rest.uniprot.org/uniprotkb/search?query=${geneName}+AND+organism_name:${speciesName}+AND+reviewed:true&fields=accession,xref_pdb,gene_names&format=json&size=2`)
         .then(function (response) {
-            if(!response.ok){
+            if (!response.ok) {
                 throw new Error("Something is wrong with our database. Try again Later.")
-            }    
+            }
             return response.json();
         })
         .then(function (data) {
             console.log(data)
-            if(!data.results || data.results.length ===0){
+            if (!data.results || data.results.length === 0) {
                 throw new Error("We couldn't find anything about what you are looking for.")
+            } else {
+
+                var uniprotAccessionCode = data.results[0].primaryAccession
+                console.log(data)
+
+                try { 
+                var pdbID = (data.results[0].uniProtKBCrossReferences[0].id).toLowerCase();
+                    getPDBImg(pdbID)
+                } catch (error) {
+                }
+
+                var returnedGeneName = data.results[0].genes[0].geneName.value;
+    
+                //uniprot + PDB data!
+                //card 1   
+
+                getUniProtInfo(uniprotAccessionCode)
+
+                //get pubmed links
+                getPubMedArticles(returnedGeneName, speciesName, NCBIAPIKey)
+
+                //get genbank UID and info
+                fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=${uniprotAccessionCode}&api_key=${NCBIAPIKey}&retmode=json&retmax=1`)
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        var genbankUID = data.esearchresult.idlist;
+
+                        //genbank data!
+                        //card 1
+                        getGenbankInfo(genbankUID, NCBIAPIKey)
+                    });
             }
-            
-            var uniprotAccessionCode = data.results[0].primaryAccession
-            console.log(data)
-            var pdbID = (data.results[0].uniProtKBCrossReferences[0].id).toLowerCase();
-            var returnedGeneName = data.results[0].genes[0].geneName.value;
-            console.log(returnedGeneName, pdbID)
-
-            //uniprot + PDB data!
-            //card 1   
-            getPDBImg(pdbID) 
-            getUniProtInfo(uniprotAccessionCode)
-
-            //get pubmed links
-            getPubMedArticles(returnedGeneName, speciesName, NCBIAPIKey)
-
-            //get genbank UID and info
-            fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=${uniprotAccessionCode}&api_key=${NCBIAPIKey}&retmode=json&retmax=1`)
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (data) {
-                    var genbankUID = data.esearchresult.idlist;
-
-                    //genbank data!
-                    //card 1
-                    getGenbankInfo(genbankUID, NCBIAPIKey)
-                });
         })
-        .catch(function(error){
-            $("#mainSection").html("<h3 style='font-size: 2em; font-weight: bold'>" + error + "</h3>");
-        });
 }
 
 //get PubMed articles
@@ -64,59 +68,61 @@ function getPubMedArticles(ID, species) {
     $("#pubsList").empty(); //clears the text from previous searches.
     fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=science[journal]+AND+${ID}+AND+${species}&retmax=5&retmode=json`)
 
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (data) {
-        console.log(data)
-
-        if(!data.esearchresult || data.esearchresult.idlist.length === 0) {
-            $("#pubsList").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find articles related to your search in our database.</h3>")        
-            return
-        }
-        data.esearchresult.idlist.forEach(pmid => {
-            fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`)
-            .then(function (response) {
-                return response.json();
-                        })
-            .then(function (data) {
-                                
-                var articleTitle = data.result[pmid].title
-                console.log(data);               
-                var articleLI = $("<li>");
-                $("#pubsList").append(articleLI);
-                var articleLink = $("<a>");
-                articleLink.href = "https://pubmed.ncbi.nlm.nih.gov/${pmid}";
-                articleLink.text(articleTitle);
-                articleLI.append(articleLink);
-
-                var authorsLine = $("<p>");
-                var authorsArray = [];
-
-                data.result[pmid].authors.forEach(item => {                    
-                    authorsArray.push(item.name + ", ");                   
-                    })
-
-                for (var i =0; i < authorsArray.length; i++) {
-                    var nameIndex = authorsArray[i];
-                    var nameSpan = $("<span>");
-                    nameSpan.text(nameIndex);
-                    authorsLine.append(nameSpan);
-                }
-
-                console.log(authorsArray);
-
-
-                $("#pubsList").append(authorsLine);
-
-                // var articleAuthors = $("<p>")
-                // data.result[pmid].authors.forEach(name => {
-
-                // });
-                
-            })          
+        .then(function (response) {
+            return response.json();
         })
-})}
+        .then(function (data) {
+            console.log(data)
+
+            if (!data.esearchresult || data.esearchresult.idlist.length === 0) {
+                $("#pubsList").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find relevant PubMed articles related to your gene.</h3>")
+                return
+            } else {
+                data.esearchresult.idlist.forEach(pmid => {
+                    fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`)
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (data) {
+
+                            var articleTitle = data.result[pmid].title
+                            console.log(data);
+                            var articleLI = $("<li>");
+                            $("#pubsList").append(articleLI);
+                            var articleLink = $("<a>");
+                            articleLink.href = "https://pubmed.ncbi.nlm.nih.gov/${pmid}";
+                            articleLink.text(articleTitle);
+                            articleLI.append(articleLink);
+
+                            var authorsLine = $("<p>");
+                            var authorsArray = [];
+
+                            data.result[pmid].authors.forEach(item => {
+                                authorsArray.push(item.name + ", ");
+                            })
+
+                            for (var i = 0; i < authorsArray.length; i++) {
+                                var nameIndex = authorsArray[i];
+                                var nameSpan = $("<span>");
+                                nameSpan.text(nameIndex);
+                                authorsLine.append(nameSpan);
+                            }
+
+                            console.log(authorsArray);
+
+
+                            $("#pubsList").append(authorsLine);
+
+                            // var articleAuthors = $("<p>")
+                            // data.result[pmid].authors.forEach(name => {
+
+                            // });
+
+                        })
+                })
+            }
+        })
+}
 
 //get PDB Img
 function getPDBImg(ID) {
@@ -150,25 +156,25 @@ function getUniProtInfo(ID) {
 
 
             //card 2
-            function card2(){
-            $("#phenotypesList").empty(); //clears the text from previous searches.
-            var diseaseInfoArray = (data.comments).filter(item => item.commentType === 'DISEASE')
-            console.log(diseaseInfoArray)
-            if(!diseaseInfoArray || diseaseInfoArray.length === 0) {
-                $("#phenotypesContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find any diseases related to this Gene.</h3>");
-                return;
+            function card2() {
+                $("#phenotypesList").empty(); //clears the text from previous searches.
+                var diseaseInfoArray = (data.comments).filter(item => item.commentType === 'DISEASE')
+                console.log(diseaseInfoArray)
+                if (!diseaseInfoArray || diseaseInfoArray.length === 0) {
+                    $("#phenotypesContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find any data on diseases associated with this Gene.</h3>");
+                    return;
+                }
+
+
+                diseaseInfoArray.forEach(item => {
+                    var diseaseName = item.disease.diseaseId
+                    var diseaseDescription = item.disease.description
+                    console.log(diseaseName + ": " + diseaseDescription)
+                    diseaseLI = $("<li>");
+                    diseaseLI.text(diseaseName + ": " + diseaseDescription);
+                    $("#phenotypesList").append(diseaseLI);
+                })
             }
-
-
-            diseaseInfoArray.forEach(item => {
-                var diseaseName = item.disease.diseaseId
-                var diseaseDescription = item.disease.description
-                console.log(diseaseName + ": " + diseaseDescription)
-                diseaseLI = $("<li>");
-                diseaseLI.text(diseaseName + ": " + diseaseDescription);
-                $("#phenotypesList").append(diseaseLI);
-            })
-        }
             card2();
 
 
@@ -184,8 +190,8 @@ function getUniProtInfo(ID) {
                 $("#expressionList").empty(); //clears the text from previous searches.
                 var expressionPatterns = data.comments.filter(item => item.commentType === 'TISSUE SPECIFICITY');
 
-                if(!expressionPatterns || expressionPatterns.length === 0) {
-                    $("#expressionContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find any patterns for this Gene.</h3>");
+                if (!expressionPatterns || expressionPatterns.length === 0) {
+                    $("#expressionContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find any expression pattern data for this Gene.</h3>");
                     return;
                 }
 
@@ -200,13 +206,13 @@ function getUniProtInfo(ID) {
                 }
             }
             card4();
-        
+
             //card 5
-            function card5(){    
+            function card5() {
                 $("#aaText").empty(); //clears the text from previous searches.
                 var proteinSequence = data.sequence.value;
-                if(!proteinSequence){
-                    $("#aaContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find a protein sequence for this Gene.</h3>");
+                if (!proteinSequence) {
+                    $("#aaContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find a protein sequence data for this Gene.</h3>");
                     return;
                 }
 
@@ -217,41 +223,50 @@ function getUniProtInfo(ID) {
 
 
             // card 6 
-            var domainArray = (data.comments).filter(item => item.commentType === 'DOMAIN')
-            console.log(domainArray)
+            function card6() {
+                var domainArray = (data.comments).filter(item => item.commentType === 'DOMAIN')
+                if (!domainArray || domainArray.length === 0) {
+                    $("#domainsContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find any domains data related to this Gene.</h3>")
+                    return;
+                }
 
-            domainArray.forEach(item => {
-                var domain = item.texts[0].value
-                domainLI = $("<li>");
-                domainLI.text(domain);
-                $("#domainsList").append(domainLI);
-            })
+                domainArray.forEach(item => {
+                    var domain = item.texts[0].value
+                    var domainLI = $("<li>");
+                    domainLI.text(domain);
+                    $("#domainsList").append(domainLI);
+                })
+            }
+            card6();
 
             //card 7 
-            function card7(){
-            $("#interactionsList").empty(); //clears the text from previous searches.
-            var subUnit = data.comments.filter(item => item.commentType === "SUBUNIT");
-            var subUnitBlock = subUnit[0].texts[0].value;
+            function card7() {
+                $("#interactionsList").empty(); //clears the text from previous searches.
+                var subUnit = data.comments.filter(item => item.commentType === "SUBUNIT");
+                if (!subUnit || subUnit.length === 0) {
+                    $("#interactionsContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find any interactions related with this Gene.</h3>")
+                    return;
+                }
+                var subUnitBlock = subUnit[0].texts[0].value;
+                console.log(subUnit);
 
-            if(!subUnit || subUnit.length ===0) {
-                $("#interactionsContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find any interactions related with this Gene.</h3>")
+
+                var subUnitArray = subUnitBlock.split('. ');
+
+                for (var i = 0; i < subUnitArray.length; i++) {
+                    var newLI = $("<li>");
+                    newLI.text(subUnitArray[i]);
+                    newLI.addClass("long-word");
+                    $("#interactionsList").append(newLI);
+                }
             }
-
-            var subUnitArray = subUnitBlock.split('. ');
-                        
-            for (var i = 0; i < subUnitArray.length; i++) {
-                var newLI = $("<li>");
-                newLI.text(subUnitArray[i]);
-                newLI.addClass("long-word");
-                $("#interactionsList").append(newLI);
-            }}
             card7();
 
-            });
+        });
 }
 
 // add to clipboard Eventlistener
-$("#aaBtn").on("click", function(){
+$("#aaBtn").on("click", function () {
     var textToCopy = $("#aaText").text();
     var clipboard = $("<textarea>"); //will not appear, will just temporarely hold the value.
     $("body").append(clipboard);
@@ -264,7 +279,7 @@ $("#aaBtn").on("click", function(){
     $(this).removeClass("is-light").addClass("is-info");
 })
 
-$("#blastBtn").on("click", function(){
+$("#blastBtn").on("click", function () {
     var textToCopy = $("#blastText").text();
     var clipboard = $("<textarea>"); //will not appear, will just temporarely hold the value.
     $("body").append(clipboard);
@@ -301,7 +316,7 @@ function getGenbankInfo(ID, key) {
             return response.json();
         })
         .then(function (data) {
-            console.log('line 294 DATA -----> ',data)
+            console.log('line 294 DATA -----> ', data)
 
 
             var geneSummary = data.result[`${ID}`].summary;

@@ -7886,3 +7886,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   }
 
 /* adv serach added */
+
+.initialHide {
+  display: none;
+}
