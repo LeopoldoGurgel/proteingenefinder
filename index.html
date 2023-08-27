@@ -69,7 +69,7 @@
                         <input type="checkbox" id="publicationsCB" checked> Publications <br>
                         <input type="checkbox" id="expressionCB" checked> Expression Patterns <br>
                         <input type="checkbox" id="aaCB" checked> Aminoacid Sequence <br>
-                        <input type="checkbox" id="blastCB" checked> Blast Sequence <br>
+                        <input type="checkbox" id="domainsCB" checked> Domains<br>
                         <input type="checkbox" id="interactionsCB" checked> Interactions <br>
                         <button id="closeBtn" class="modal-close is-large" aria-label="close"></button>
                         <!-- MODAL CHECKBOXES - UP -->
@@ -78,38 +78,52 @@
                 </div>
 
             </form>
-                <div id="table-of-contents" class="box initialHide">
+            <div id="table-of-contents" class="box initialHide">
 
-                    <!-- TABLE OF CONTENTS - DOWN-->
-                    <table>
-                        <th>Table of Contents</th>
-                        <tr>
-                            <td id="summaryTC" class="">Summary</td>
-                        </tr>
-                        <tr>
-                            <td id="phenotypesTC" class="">Phenotypes</td>
-                        </tr>
-                        <tr>
-                            <td id="publicationsTC" class="">Publications</td>
-                        </tr>
-                        <tr>
-                            <td id="expressionTC" class="">Expression Patterns</td>
-                        </tr>
-                        <tr>
-                            <td id="aaTC">Aminoacid Sequence</td>
-                        </tr>
-                        <tr>
-                            <td id="blastTC">Blast sequence</td>
-                        </tr>
-                        <tr>
-                            <td id="interactionsTC">Interactions</td>
-                        </tr>
-                    </table>
-                    <!-- TABLE OF CONTENTS - UP -->
-                </div>
+                <!-- TABLE OF CONTENTS - DOWN-->
+                <table>
+                    <th>Table of Contents</th>
+                    <tr>
+                        <td id="summaryTC" class="">
+                            <a href="#phenotypesBox">Summary</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="phenotypesTC" class="">
+                            <a href="#summaryContent">Diseases Associated</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="publicationsTC" class="">
+                            <a href="#publicationsBox">Relevant Articles</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="expressionTC" class="">
+                            <a href="#expressionBox">Expression Patterns</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="aaTC" class="">
+                            <a href="#aaBox">Protein Sequence</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="domainsTC" class="">
+                            <a href="#domainsBox">Expression Patterns</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="interactionsTC" class="">
+                            <a href="#interactionsBox">Interactions</a>
+                        </td>
+                    </tr>
+                </table>
+                <!-- TABLE OF CONTENTS - UP -->
+            </div>
 
         </aside>
-        <section id="mainSection" class=" column" style="height: calc(100vh - 6rem); overflow-y: auto;">
+        <section id="mainSection" class="initialHide column" style="height: calc(100vh - 6rem); overflow-y: auto;">
             <div id="summaryBox" class="box">
                 <img src="#" class="hidden" id="pdbImg" style="width: 100px; height: 130px; float: right;">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Summary</h2>
@@ -198,7 +212,7 @@
         <!-- link jquery UI-->
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         <script src="./assets/js/script.js"></script>
-        <script src="./assets/js/advancedSearch.js"></script>
+        <script src="./assets/js/filterResults.js"></script>
     </main>
 </body>
 
