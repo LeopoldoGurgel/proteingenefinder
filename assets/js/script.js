@@ -218,7 +218,7 @@ function getUniProtInfo(ID) {
 
             // card 6 
             var domainArray = (data.comments).filter(item => item.commentType === 'DOMAIN')
-            console.log(diseaseInfoArray)
+            console.log(domainArray)
 
             domainArray.forEach(item => {
                 var domain = item.texts[0].value
