@@ -61,6 +61,7 @@ function fetchAccessionID(geneName, speciesName) {
 
 //get PubMed articles
 function getPubMedArticles(ID, species) {
+    $("#pubsList").empty(); //clears the text from previous searches.
     fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=science[journal]+AND+${ID}+AND+${species}&retmax=5&retmode=json`)
 
     .then(function (response) {
@@ -126,6 +127,7 @@ function getPDBImg(ID) {
         .then(function (blob) {
             var imageUrl = URL.createObjectURL(blob); // Create an object URL from the Blob
             var pdbImgEl = $('#pdbImg'); // Get the image element
+            pdbImgEl.removeClass("hidden");
             pdbImgEl.attr('src', imageUrl); // Set the src attribute of the image element
         });
 }
@@ -139,17 +141,6 @@ function getUniProtInfo(ID) {
         .then(function (data) {
             console.log(data)
 
-            // organizes the data
-            const parsedData = data.comments.map(comment => ({
-                commentType: comment.commentType,
-                texts: comment.texts,
-                evidences: comment.evidences,
-                value: comment.value,
-            }));
-        
-            console.log(parsedData);
-
-
             //card 1 variables
 
             var proteinName = data.proteinDescription.recommendedName.fullName.value
@@ -160,6 +151,7 @@ function getUniProtInfo(ID) {
 
             //card 2
             function card2(){
+            $("#phenotypesList").empty(); //clears the text from previous searches.
             var diseaseInfoArray = (data.comments).filter(item => item.commentType === 'DISEASE')
             console.log(diseaseInfoArray)
             if(!diseaseInfoArray || diseaseInfoArray.length === 0) {
@@ -189,7 +181,7 @@ function getUniProtInfo(ID) {
 
 
             function card4() {
-
+                $("#expressionList").empty(); //clears the text from previous searches.
                 var expressionPatterns = data.comments.filter(item => item.commentType === 'TISSUE SPECIFICITY');
 
                 if(!expressionPatterns || expressionPatterns.length === 0) {
@@ -211,6 +203,7 @@ function getUniProtInfo(ID) {
         
             //card 5
             function card5(){    
+                $("#aaText").empty(); //clears the text from previous searches.
                 var proteinSequence = data.sequence.value;
                 if(!proteinSequence){
                     $("#aaContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find a protein sequence for this Gene.</h3>");
@@ -235,8 +228,9 @@ function getUniProtInfo(ID) {
             })
 
             //card 7 
+            function card7(){
+            $("#interactionsList").empty(); //clears the text from previous searches.
             var subUnit = data.comments.filter(item => item.commentType === "SUBUNIT");
-            
             var subUnitBlock = subUnit[0].texts[0].value;
 
             if(!subUnit || subUnit.length ===0) {
@@ -250,11 +244,55 @@ function getUniProtInfo(ID) {
                 newLI.text(subUnitArray[i]);
                 newLI.addClass("long-word");
                 $("#interactionsList").append(newLI);
-            }
-
+            }}
+            card7();
 
             });
 }
+
+// add to clipboard Eventlistener
+$("#aaBtn").on("click", function(){
+    var textToCopy = $("#aaText").text();
+    var clipboard = $("<textarea>"); //will not appear, will just temporarely hold the value.
+    $("body").append(clipboard);
+    // selects the content of the text area containing the aaText
+    clipboard.val(textToCopy).select();
+    // copies the text
+    document.execCommand("copy");
+    clipboard.remove();
+    $(this).text("Copied!");
+    $(this).removeClass("is-light").addClass("is-info");
+})
+
+$("#blastBtn").on("click", function(){
+    var textToCopy = $("#blastText").text();
+    var clipboard = $("<textarea>"); //will not appear, will just temporarely hold the value.
+    $("body").append(clipboard);
+    // selects the content of the text area containing the aaText
+    clipboard.val(textToCopy).select();
+    // copies the text
+    document.execCommand("copy");
+    clipboard.remove();
+    $(this).text("Copied!");
+    $(this).removeClass("is-light").addClass("is-info");
+})
+
+
+// was trying to fix a bug by clearing everything as the first
+// function called when the search button was clicked.
+// didnt work.
+
+// function refreshContent() {
+//     $("#interactionsList").empty();
+//     $("#geneNameDisplay").empty();
+//     $("#proteinDisplay").empty();
+//     $("#organismDisplay").empty();
+//     $("#aaDisplay").empty();
+//     $("#bsDisplay").empty();
+//     $("#phenotypesList").empty();
+//     $("#pubsList").empty();
+//     $("#aaText").empty();
+// }
 
 //get genbank info
 function getGenbankInfo(ID, key) {
