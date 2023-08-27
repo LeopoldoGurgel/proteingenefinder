@@ -7885,4 +7885,22 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
     word-wrap: break-word;
   }
 
-/* adv serach added */
+  .dropdown-content {
+    
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+  }
+  
+  .dropdown-content a:hover {
+    background-color: #f1f1f1;
+  }
