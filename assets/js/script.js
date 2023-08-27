@@ -52,13 +52,11 @@ function fetchAccessionID(geneName, speciesName) {
                     //genbank data!
                     //card 1
                     getGenbankInfo(genbankUID, NCBIAPIKey)
-
                 });
         })
         .catch(function(error){
-            $("#mainSection").html("<h3 style='font-size: 2em; font-weight: bold'>" + error);
+            $("#mainSection").html("<h3 style='font-size: 2em; font-weight: bold'>" + error + "</h3>");
         });
-        // card4();
 }
 
 //get PubMed articles
@@ -71,18 +69,17 @@ function getPubMedArticles(ID, species) {
     .then(function (data) {
         console.log(data)
 
-        if(!data.esearchresult || data.esearchresult.length === 0) {
-            throw new Error("We couldn't find articles related to your search in our database.")
+        if(!data.esearchresult || data.esearchresult.idlist.length === 0) {
+            $("#pubsList").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find articles related to your search in our database.</h3>")        
+            return
         }
-
         data.esearchresult.idlist.forEach(pmid => {
             fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`)
             .then(function (response) {
                 return response.json();
-
-
-            })
+                        })
             .then(function (data) {
+                                
                 var articleTitle = data.result[pmid].title
                 console.log(data);               
                 var articleLI = $("<li>");
@@ -162,8 +159,13 @@ function getUniProtInfo(ID) {
 
 
             //card 2
+            function card2(){
             var diseaseInfoArray = (data.comments).filter(item => item.commentType === 'DISEASE')
             console.log(diseaseInfoArray)
+            if(!diseaseInfoArray || diseaseInfoArray.length === 0) {
+                $("#phenotypesContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find any diseases related to this Gene.</h3>");
+                return;
+            }
 
 
             diseaseInfoArray.forEach(item => {
@@ -174,6 +176,8 @@ function getUniProtInfo(ID) {
                 diseaseLI.text(diseaseName + ": " + diseaseDescription);
                 $("#phenotypesList").append(diseaseLI);
             })
+        }
+            card2();
 
 
             //card 4
@@ -185,22 +189,38 @@ function getUniProtInfo(ID) {
 
 
             function card4() {
-                var expressionPatterns = data.comments[1].texts[0].value
-            var expressionPatternsArray = expressionPatterns.split(". ");
-            
-            for (var i = 0; i < expressionPatternsArray.length; i++) {
-                var newLI = $("<li>");
-                newLI.text(expressionPatternsArray[i]);
-                newLI.addClass("long-word");
-                $("#expressionList").append(newLI);
+
+                var expressionPatterns = data.comments.filter(item => item.commentType === 'TISSUE SPECIFICITY');
+
+                if(!expressionPatterns || expressionPatterns.length === 0) {
+                    $("#expressionContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find any patterns for this Gene.</h3>");
+                    return;
+                }
+
+                var expressionPatternsArray = expressionPatterns[0].texts[0].value.split(". ")
+
+                for (var i = 0; i < expressionPatternsArray.length; i++) {
+                    var patternText = expressionPatternsArray[i];
+                    var newLI = $("<li>");
+                    newLI.text(patternText);
+                    newLI.addClass("long-word");
+                    $("#expressionList").append(newLI);
+                }
             }
-        }
-
-
+            card4();
+        
             //card 5
-            var proteinSequence = data.sequence.value;
-            $("#aaText").text(proteinSequence);
-            console.log(proteinSequence);
+            function card5(){    
+                var proteinSequence = data.sequence.value;
+                if(!proteinSequence){
+                    $("#aaContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find a protein sequence for this Gene.</h3>");
+                    return;
+                }
+
+                $("#aaText").text(proteinSequence);
+                console.log(proteinSequence);
+            }
+            card5();
 
 
             // card 6 
@@ -215,9 +235,15 @@ function getUniProtInfo(ID) {
             })
 
             //card 7 
-            var subUnitInteractions = data.comments[0].texts[0].value
+            var subUnit = data.comments.filter(item => item.commentType === "SUBUNIT");
+            
+            var subUnitBlock = subUnit[0].texts[0].value;
 
-            var subUnitArray = subUnitInteractions.split('. ');
+            if(!subUnit || subUnit.length ===0) {
+                $("#interactionsContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find any interactions related with this Gene.</h3>")
+            }
+
+            var subUnitArray = subUnitBlock.split('. ');
                         
             for (var i = 0; i < subUnitArray.length; i++) {
                 var newLI = $("<li>");
@@ -227,11 +253,7 @@ function getUniProtInfo(ID) {
             }
 
 
-            var subUnitArray = data.comments[0].texts[0].value.split(". ");
-            console.log(subUnitArray);
-            $("#aaText").text(proteinSequence);
-
-        });
+            });
 }
 
 //get genbank info
