@@ -1,92 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gene Search Engine</title>
-        <!-- link bulma framework -->
+    <!-- link bulma framework -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-        <!-- link jquery UI-->
+    <!-- link jquery UI-->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="./assets/css/styles.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 </head>
+
 <body class="has-background-white-ter" style="height: 100vh">
-    
+
     <header class="card-header-title">
         <!-- <img src="logo.img"> ARE WE ADDING ONE? -->
 
         <!-- PAGE "LOGO" (IT'S AN ICON, ACTUALLY) AND H1  -->
-        <h1 class="title"><span class="material-symbols-outlined" 
-        style="font-size: 1.5em; transform: rotate(20deg);">genetics</span>       Gene Search Engine</h1>
+        <h1 class="title"><span class="material-symbols-outlined"
+                style="font-size: 1.5em; transform: rotate(20deg);">genetics</span> Gene Search Engine</h1>
 
 
     </header>
-   
+
     <main class="columns">
-        <aside class="column is-narrow is-3" style="height: calc(100vh - 6rem); overflow-y: auto;">
+        <aside id = "searchBox"class="column is-narrow is-10 is-centered is-offset-1" style="height: calc(100vh - 6rem); overflow-y: auto;">
             <form name="geneSearch" class="box">
 
 
                 <!-- SEARCH INPUT SECTION -->
-                <div id="line1" style="padding:5px">
-                    <input type="text" id="geneInput" class=""  style="width: 73%; height: 40px; margin-bottom: 5px">
-                    <div id="geneDropdown" class="dropdown-content hidden"></div>
-                    <input id="submitBtn" type="submit" value="Search" class="button is-primary is-tiny" style="width: 23%">
-                </div>
+                <div id="line1" style="padding: 5px">
+                    <div class="field has-addons">
+                      <div class="control" style="width: 100%;">
+                        <input type="text" id="geneInput" class="input" placeholder="Search..." style="height: 40px; margin-bottom: 5px">
+                        <div id="geneDropdown" class="dropdown-content hidden"></div>
+                      </div>
+                      <div class="control">
+                        <a id="submitBtn" class="button is-primary">Search</a>
+                      </div>
+                    </div>
+                  </div>
+                  
+                
                 <div id="line2" style="padding:5px">
 
 
                     <!-- SPECIES SELECTION DROPDOWN INPUT -->
-                    <select id="speciesMenu" class="select is-medium"  style="width: 73%; font-size: 1em;">                        
-                    <option value="human">Human (homosapiens)</option>
-                    <option>option 2</option>
-                    <option>option 3</option>
-                    <option>option 4</option>
+                    <select id="speciesMenu" class="select is-medium"
+                        style="width: 100%; font-size: 1em;margin-bottom: 15px">
+                        <option value="Human">Human (Homo sapiens)</option>
+                        <option value="Mus_musculus">Mouse (Mus musculus)</option>
+                        <option value="Drosophila_melanogaster">Fruit Fly (Drosophila melanogaster)</option>
+                        <option value="Pan_troglodytes">Chimpanzee (Pan troglodytes)</option>
                     </select>
 
 
-
-                    <button id="advSearchBtn" class="button is-tiny" style="width: 23%; font-size: 0.9em; padding: 19px 0"><p class="material-symbols-outlined" style="font-size: 1.5em;">tune</p><br><p style="font-size: 1em;">Filter</p></button>
+                    <div>
+                        <button id="advSearchBtn" class="button is-tiny"
+                            style="width: 100%; font-size: 0.9em; padding: 19px 0">
+                            <p class="material-symbols-outlined" style="font-size: 1.5em;">tune</p><br>
+                            <p style="font-size: 1em;">Filter Results</p>
+                        </button>
+                    </div>
                 </div>
-                <div  id="advSearchBox" class="modal">
+                <div id="advSearchBox" class="modal">
                     <div id="modalBg" class="modal-background"></div>
 
                     <!-- MODAL CHECKBOXES - DOWN -->
                     <div class="modal-content has-background-light" style="padding: 20px">
-                        <input type="checkbox" id="phenotypesCB" checked> Phenotypes<br>
+                        <input type="checkbox" id="phenotypesCB" checked> Diseases Associated<br>
                         <input type="checkbox" id="publicationsCB" checked> Publications <br>
                         <input type="checkbox" id="expressionCB" checked> Expression Patterns <br>
                         <input type="checkbox" id="aaCB" checked> Aminoacid Sequence <br>
-                        <input type="checkbox" id="blastCB" checked> Blast Sequence <br>
+                        <input type="checkbox" id="domainsCB" checked> Domains<br>
                         <input type="checkbox" id="interactionsCB" checked> Interactions <br>
                         <button id="closeBtn" class="modal-close is-large" aria-label="close"></button>
                         <!-- MODAL CHECKBOXES - UP -->
 
-                    </div>                   
+                    </div>
                 </div>
+
             </form>
-            <div id="table-of-contents" class="box">
-                
-                
+            <div id="table-of-contents" class="box initialHide">
+
                 <!-- TABLE OF CONTENTS - DOWN-->
                 <table>
                     <th>Table of Contents</th>
-                    <tr><td id="summaryTC" class="">Summary</td></tr>
-                    <tr><td id="phenotypesTC" class="">Phenotypes</td></tr>
-                    <tr><td id="publicationsTC" class="">Publications</td></tr>
-                    <tr><td id="expressionTC" class="">Expression Patterns</td></tr>
-                    <tr><td id="aaTC" >Aminoacid Sequence</td></tr>
-                    <tr><td id="blastTC" >Blast sequence</td></tr>
-                    <tr><td id="interactionsTC" >Interactions</td></tr>
+                    <tr>
+                        <td id="summaryTC" class="">
+                            <a href="#phenotypesBox">Summary</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="phenotypesTC" class="">
+                            <a href="#summaryContent">Diseases Associated</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="publicationsTC" class="">
+                            <a href="#publicationsBox">Relevant Articles</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="expressionTC" class="">
+                            <a href="#expressionBox">Expression Patterns</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="aaTC" class="">
+                            <a href="#aaBox">Protein Sequence</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="domainsTC" class="">
+                            <a href="#domainsBox">Expression Patterns</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="interactionsTC" class="">
+                            <a href="#interactionsBox">Interactions</a>
+                        </td>
+                    </tr>
                 </table>
                 <!-- TABLE OF CONTENTS - UP -->
-
-
             </div>
+
         </aside>
-        <section id="mainSection" class=" column" style="height: calc(100vh - 6rem); overflow-y: auto;">
+        <section id="mainSection" class="initialHide column" style="height: calc(100vh - 6rem); overflow-y: auto;">
             <div id="summaryBox" class="box">
                 <img src="#" class="hidden" id="pdbImg" style="width: 100px; height: 130px; float: right;">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Summary</h2>
@@ -96,35 +141,35 @@
 
                 <!-- CARD 1 -->
                 <div id="summaryContent">
-                <div style="padding-left: 20px;">
-                    <span style="font-weight: bold;">Gene name: </span>
-                    <span id="geneNameDisplay"></span><br>
-                    <span style="font-weight: bold;">Protein: </span>
-                    <span id="proteinDisplay"></span><br>
-                    <span style="font-weight: bold;">Organism: </span>
-                    <span id="organismDisplay"></span><br>
-                    <span style="font-weight: bold;">Aminoacid length: </span>
-                    <span id="aaDisplay"></span><br>
-                    <span style="font-weight: bold;">Basic summary: </span>
-                    <span id="bsDisplay"></span>
+                    <div style="padding-left: 20px;">
+                        <span style="font-weight: bold;">Gene name: </span>
+                        <span id="geneNameDisplay"></span><br>
+                        <span style="font-weight: bold;">Protein: </span>
+                        <span id="proteinDisplay"></span><br>
+                        <span style="font-weight: bold;">Organism: </span>
+                        <span id="organismDisplay"></span><br>
+                        <span style="font-weight: bold;">Protein length: </span>
+                        <span id="aaDisplay"></span><br>
+                        <span style="font-weight: bold;">Basic summary: </span>
+                        <span id="bsDisplay"></span>
+                    </div>
                 </div>
-            </div>
             </div>
 
             <!-- CARD 2 -->
             <div id="phenotypesBox" class="box">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Phenotypes Associated:</h2>
-                <div id="phenotypesContent" style="padding-left: 20px;">                
+                <div id="phenotypesContent" style="padding-left: 20px;">
                     <ul id="phenotypesList"></ul>
-                </div>           
+                </div>
             </div>
 
             <!-- CARD 3 -->
             <div id="publicationsBox" class="box">
-                <h2 style="font-size: 1.5em; font-weight: bold;">Recent Articles:</h2>
+                <h2 style="font-size: 1.5em; font-weight: bold;">Relevant Articles:</h2>
                 <div id="publicationsContent" style="padding-left: 20px;">
                     <ol id="pubsList"></ol>
-                </div>           
+                </div>
             </div>
 
             <!-- CARD 4 -->
@@ -149,9 +194,9 @@
 
             <!-- CARD 6 -->
 
-            <div id="domainsMotifsBox" class="box ">
+            <div id="domainsBox" class="box ">
                 <h2 style="font-size: 1.5em; font-weight: bold;">Domains</h2>
-                <div style="padding-left: 20px;">
+                <div id="domainsContent" style="padding-left: 20px;">
                     <ul style="width: 100%;" id="domainsList"></ul>
 
                 </div>
@@ -165,16 +210,18 @@
                 </div>
             </div>
         </section>
+        </div>
 
-            <!--link jquery-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    <!-- link jquery UI-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="./assets/js/script.js"></script>
-    <script src="./assets/js/advancedSearch.js"></script>
+        <!--link jquery-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+        <!-- link jquery UI-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script src="./assets/js/script.js"></script>
+        <script src="./assets/js/filterResults.js"></script>
     </main>
 </body>
-</html>
 
+</html>

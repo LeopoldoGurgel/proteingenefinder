@@ -7885,6 +7885,11 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
     word-wrap: break-word;
   }
 
+
+.initialHide {
+  display: none;
+}
+
   .dropdown-content {
     
     position: absolute;
@@ -7904,3 +7909,5 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   .dropdown-content a:hover {
     background-color: #f1f1f1;
   }
+
+

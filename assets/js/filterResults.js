@@ -39,9 +39,9 @@ var expressionBox = document.getElementById("expressionBox");
 var aaTC = document.getElementById("aaTC");
 var aaCB = document.getElementById("aaCB");
 var aaBox = document.getElementById("aaBox");
-var blustTC = document.getElementById("blastTC");
-var blustCB = document.getElementById("blastCB");
-var blustBox = document.getElementById("blastBox");
+var domainsTC = document.getElementById("domainsTC");
+var domainsCB = document.getElementById("domainsCB");
+var domainsBox = document.getElementById("domainsBox");
 var interactionsTC = document.getElementById("interactionsTC");
 var interactionsCB = document.getElementById("interactionsCB");
 var interactionsBox = document.getElementById("interactionsBox");
@@ -86,13 +86,13 @@ aaCB.addEventListener("change",function(){
     }
 })
 
-blustCB.addEventListener("change",function(){
-    if(blustCB.checked){
-        blustBox.classList.remove("hidden");
-        blustTC.classList.remove("hidden");
+domainsCB.addEventListener("change",function(){
+    if(domainsCB.checked){
+        domainsBox.classList.remove("hidden");
+        domainsTC.classList.remove("hidden");
     }else{
-        blustBox.classList.add("hidden");
-        blustTC.classList.add("hidden");
+        domainsBox.classList.add("hidden");
+        domainsTC.classList.add("hidden");
     }
 })
 
