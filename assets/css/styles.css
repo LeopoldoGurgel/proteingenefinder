@@ -7888,6 +7888,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 
 .initialHide {
   display: none;
+}
 
   .dropdown-content {
     
@@ -7908,4 +7909,5 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   .dropdown-content a:hover {
     background-color: #f1f1f1;
   }
+
 

@@ -6,6 +6,7 @@ var NCBIAPIKey = 'd019ce82781c44b8ac9d2547bbc391e9a908';
 $("#submitBtn").on("click", function (event) {
     $('#table-of-contents').removeClass('initialHide')
     $('#mainSection').removeClass('initialHide')
+    $('#searchBox').removeClass('is-10 is-centered is-offset-1').addClass('is-3')
     event.preventDefault();
 
     var userGene = $("#geneInput").val();
