@@ -5,6 +5,7 @@ var geneDropdown = $("#geneDropdown");
 
 
 $("#submitBtn").on("click", function (event) {
+
     $('#table-of-contents').removeClass('initialHide')
     $('#mainSection').removeClass('initialHide')
     $('#searchBox').removeClass('is-10 is-centered is-offset-1').addClass('is-3')
@@ -26,6 +27,7 @@ $("#submitBtn").on("click", function (event) {
 
 
     fetchAccessionID(userGene, userSpecies)
+
 });
 
 //gets accession number and PDB id of user search
