@@ -390,8 +390,8 @@ function displayHistory() {
 geneInput.on("mouseover", function(event){
     event.preventDefault();
     geneInput.val(" ");
-    displayHistory();
     geneDropdown.removeClass("hidden");
+    displayHistory();
 })
 
 geneInput.on("blur", function(){
