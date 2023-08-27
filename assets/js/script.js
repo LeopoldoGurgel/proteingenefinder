@@ -58,7 +58,7 @@ function fetchAccessionID(geneName, speciesName) {
         .catch(function(error){
             $("#mainSection").html("<h3 style='font-size: 2em; font-weight: bold'>" + error);
         });
-        card4();
+        // card4();
 }
 
 //get PubMed articles
@@ -118,67 +118,6 @@ function getPubMedArticles(ID, species) {
                 
             })          
         })
-        .then(function (data) {
-            data.esearchresult.idlist.forEach(pmid => {
-                fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`)
-                    .then(function (response) {
-                        return response.json();
-                    })
-                    .then(function (data) {
-                        console.log(data)
-                        var articleTitle = data.result[pmid].title
-                        console.log(articleTitle);
-                        var articleLink = `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`
-                        console.log(articleLink)
-                    })
-
-            })
-            .then(function (data) {
-                var articleTitle = data.result[pmid].title
-                console.log(data);               
-                var articleLI = $("<li>");
-                $("#pubsList").append(articleLI);
-                var articleLink = $("<a>");
-                articleLink.href = "https://pubmed.ncbi.nlm.nih.gov/${pmid}";
-                articleLink.text(articleTitle);
-                articleLI.append(articleLink);
-
-                var authorsLine = $("<p>");
-                authorsLine.text("Authors: ")
-                var authorsArray = [];
-
-                data.result[pmid].authors.forEach((item, index) => {
-                    authorsArray.push(item.name);
-                    
-                    if (index < data.result[pmid].authors.length - 1) {
-                        authorsArray.push(", ");
-                    }
-                });
-                
-                var authorsString = authorsArray.join("");
-
-
-
-                for (var i =0; i < authorsArray.length; i++) {
-                    var nameIndex = authorsArray[i];
-                    var nameSpan = $("<span>");
-                    nameSpan.text(nameIndex);
-                    authorsLine.append(nameSpan);
-                }
-
-                console.log(authorsArray);
-
-
-                $("#pubsList").append(authorsLine);
-
-                // var articleAuthors = $("<p>")
-                // data.result[pmid].authors.forEach(name => {
-
-                // });
-                
-            })
-          
-        })
 })}
 
 //get PDB Img
@@ -196,7 +135,7 @@ function getPDBImg(ID) {
 
 //get uniprot info 
 function getUniProtInfo(ID) {
-    fetch(`https://rest.uniprot.org/uniprotkb/${ID}?format=json&fields=organism_name,protein_name,length,sequence,cc_disease,cc_subunit,cc_tissue_specificity,&size=1`)
+    fetch(`https://rest.uniprot.org/uniprotkb/${ID}?format=json&fields=organism_name,protein_name,length,sequence,cc_disease,cc_subunit,cc_tissue_specificity,cc_domain&size=1`)
         .then(function (response) {
             return response.json();
         })
@@ -263,6 +202,18 @@ function getUniProtInfo(ID) {
             $("#aaText").text(proteinSequence);
             console.log(proteinSequence);
 
+
+            // card 6 
+            var domainArray = (data.comments).filter(item => item.commentType === 'DOMAIN')
+            console.log(diseaseInfoArray)
+
+            domainArray.forEach(item => {
+                var domain = item.texts[0].value
+                domainLI = $("<li>");
+                domainLI.text(domain);
+                $("#domainsList").append(domainLI);
+            })
+
             //card 7 
             var subUnitInteractions = data.comments[0].texts[0].value
 
@@ -290,7 +241,7 @@ function getGenbankInfo(ID, key) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data)
+            console.log('line 294 DATA -----> ',data)
 
 
             var geneSummary = data.result[`${ID}`].summary;
@@ -317,5 +268,6 @@ function getGenbankInfo(ID, key) {
             console.log(geneTitle);
         });
 }
+
 
 // fetch(`https://rest.uniprot.org/uniprotkb/search?query=CFTR+AND+organism_name:human+AND+reviewed:true&fields=accession,xref_pdb,xref_ensembl&format=json&size=2`)
