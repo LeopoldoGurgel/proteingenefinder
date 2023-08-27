@@ -31,7 +31,7 @@
 
                 <!-- SEARCH INPUT SECTION -->
                 <div id="line1" style="padding:5px">
-                    <input type="text" id="geneInput" class=""  style="width: 73%; height: 40px; margin-botton: 5px">
+                    <input type="text" id="geneInput" class=""  style="width: 73%; height: 40px; margin-bottom: 5px">
                     <input id="submitBtn" type="submit" value="Search" class="button is-primary is-tiny" style="width: 23%">
                 </div>
                 <div id="line2" style="padding:5px">
@@ -147,13 +147,12 @@
             </div>
 
             <!-- CARD 6 -->
-            <div id="blastBox" class="box ">
-                <div id="aaHeader" style="display: flex; justify-content: space-between;">
-                    <h2 style="font-size: 1.5em; font-weight: bold;">Blast Sequence:</h2>
-                    <button id="blastBtn" class="button is-light">Copy to clipboard</button>
-                </div>
-                <div style="padding-left: 20px; max-height: 200px; overflow: auto;">
-                    <p id="blastText" style='font-size: 1.2em; font-weight: bold'>Sorry. We have no idea of how to bring this up to you!</p>
+
+            <div id="domainsMotifsBox" class="box ">
+                <h2 style="font-size: 1.5em; font-weight: bold;">Domains</h2>
+                <div style="padding-left: 20px;">
+                    <ul style="width: 100%;" id="domainsList"></ul>
+
                 </div>
             </div>
 
