@@ -1,7 +1,8 @@
-// var userGene = $('#geneInput').val
-// var userSpecies = $('#speciesMenu').val
 
+var arrayStorage = JSON.parse(localStorage.getItem('filteredSearchHistory')) || [];
 var NCBIAPIKey = 'd019ce82781c44b8ac9d2547bbc391e9a908';
+var geneDropdown = $("#geneDropdown");
+
 
 $("#submitBtn").on("click", function (event) {
     $('#table-of-contents').removeClass('initialHide')
@@ -11,12 +12,16 @@ $("#submitBtn").on("click", function (event) {
 
     var userGene = $("#geneInput").val();
 
+    //store user search to local storage and filter array so there are no repeats
+    arrayStorage.push(userGene)
+    var filteredSearchHistory = [...new Set(arrayStorage)]
+    localStorage.setItem('filteredSearchHistory', JSON.stringify(filteredSearchHistory));
+
     var userSpecies = $("#speciesMenu").val();
 
-    
+
     // saves the search input to local history
-    if(userGene !== " "){
-        updateSearchHistory(userGene);
+    if (userGene !== " ") {
     }
 
 
@@ -41,14 +46,14 @@ function fetchAccessionID(geneName, speciesName) {
                 var uniprotAccessionCode = data.results[0].primaryAccession
                 console.log(data)
 
-                try { 
-                var pdbID = (data.results[0].uniProtKBCrossReferences[0].id).toLowerCase();
+                try {
+                    var pdbID = (data.results[0].uniProtKBCrossReferences[0].id).toLowerCase();
                     getPDBImg(pdbID)
                 } catch (error) {
                 }
 
                 var returnedGeneName = data.results[0].genes[0].geneName.value;
-    
+
                 //uniprot + PDB data!
                 //card 1   
 
@@ -342,84 +347,33 @@ function getGenbankInfo(ID, key) {
 }
 
 
-// saves geneInput entry to local storage
-var geneDropdown = $("#geneDropdown");
-var geneInput = $("#geneInput");
-var searchHistory = JSON.parse(localStorage.getItem("searchHistory"))||[];
+$("#geneInput").on("click", function () {
+    $(geneDropdown).removeClass("hidden");
+    updateSearchHistory();
+  });
 
-function updateSearchHistory(value){
-    
-    // this makes the local storage only keep 5 indexes.
-    // since push make the new index go to the end of the array
-    // the shift method takes out the first index.
-    if(searchHistory.length >= 5){
-        searchHistory.shift();
-    }
-
-    searchHistory.push(value);
-
-    localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
-}
-
-// displays searchHistory in the dropdown menu
-
-function displayHistory() {
+var updateSearchHistory = function () {
     geneDropdown.empty();
-    
-    searchHistory.forEach(value => {
-        var entry = $("<a>").text(value);
-        entry.on("click", function(){
-            geneInput.val(value);
-            // hide and show methods add the display: none rule and 
-            // take back again. This would have saved me some time 
-            // a few lines ago.
-            geneDropdown.addClass("hidden");
-        });
-        geneDropdown.append(entry);
+    var searchHistory = JSON.parse(localStorage.getItem('filteredSearchHistory')) || [];
+    searchHistory.forEach(function (searchQuery) {
+        var searchHistoryButton = $('<a>');
+        searchHistoryButton.text(searchQuery);
+        geneDropdown.append(searchHistoryButton);
     })
 }
 
+$(geneDropdown).on("click", "a", function () {
+    var value = $(this).text();
+    $("#geneInput").val(value);
+    $(geneDropdown).addClass("hidden");
+  });
 
-// This gave me a hard time. When using a click event listener, the browser
-// stock dropdown menu would appear over mine. When using a mousedown
-// event listener to get rid of the browser menu, I couldnt type anything into
-// the input anymore. Then i tried the focus event listener.
-// I coult type again, but i couldnt click on any of my dropdown items.
-// Problem was solved with mouse over. Not quite what I wanted. But
-// it does its job.
-geneInput.on("mouseover", function(event){
-    event.preventDefault();
-    geneInput.val(" ");
-    geneDropdown.removeClass("hidden");
-    displayHistory();
-})
-
-geneInput.on("blur", function(){
-    geneDropdown.addClass("hidden");
-})
-
-$(document).on("click", function(event) {
+//closes the dropdown when clicked out
+$(document).on("click", function (event) {
     if (
-      !$(event.target).is(geneInput) &&
+      !$(event.target).is("#geneInput") &&
       !$(event.target).closest(geneDropdown).length
     ) {
       geneDropdown.addClass("hidden");
     }
-  });
-
-geneInput.on("keyup", function(event){
-    if(event.key === "Enter"){
-        var value = geneInput.val().trim();
-        if(value !== " "){
-            updateSearchHistory(value);
-        }
-    }
-})
-
-geneDropdown.on("focus", function() {
-    var value = $(this).text();
-    geneInput.val(value);
-    geneDropdown.addClass("hidden");
-  });
-
-// fetch(`https://rest.uniprot.org/uniprotkb/search?query=CFTR+AND+organism_name:human+AND+reviewed:true&fields=accession,xref_pdb,xref_ensembl&format=json&size=2`)
+  }); 
