@@ -359,6 +359,14 @@ function displayHistory() {
     })
 }
 
+
+// This gave me a hard time. When using a click event listener, the browser
+// stock dropdown menu would appear over mine. When using a mousedown
+// event listener to get rid of the browser menu, I couldnt type anything into
+// the input anymore. Then i tried the focus event listener.
+// I coult type again, but i couldnt click on any of my dropdown items.
+// Problem was solved with mouse over. Not quite what I wanted. But
+// it does its job.
 geneInput.on("mouseover", function(event){
     event.preventDefault();
     geneInput.val(" ");
