@@ -359,8 +359,9 @@ function displayHistory() {
     })
 }
 
-geneInput.on("mousedown", function(event){
+geneInput.on("mouseover", function(event){
     event.preventDefault();
+    geneInput.val(" ");
     displayHistory();
     geneDropdown.removeClass("hidden");
 })
@@ -387,7 +388,7 @@ geneInput.on("keyup", function(event){
     }
 })
 
-geneDropdown.on("click", "a", function() {
+geneDropdown.on("focus", function() {
     var value = $(this).text();
     geneInput.val(value);
     geneDropdown.addClass("hidden");
