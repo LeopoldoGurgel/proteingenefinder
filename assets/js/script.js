@@ -24,59 +24,61 @@ $("#submitBtn").on("click", function (event) {
 //gets accession number and PDB id of user search
 function fetchAccessionID(geneName, speciesName) {
     showLoadingIcon(); // Show loading icon immediately
+    $('#searchBox').removeClass('is-10 is-centered is-offset-1').addClass('is-3');
+    $('#pubmedLink').addClass('hidden');
 
     fetch(`https://rest.uniprot.org/uniprotkb/search?query=${geneName}+AND+organism_name:${speciesName}+AND+reviewed:true&fields=accession,xref_pdb,gene_names&format=json&size=2`)
-        .then(function (response) {
-            if (!response.ok) {
-                showErrorDb("Something is wrong with our database. Try again Later.");
-                hideLoadingIcon(); // Hide loading icon on error
-            }
-            return response.json();
-        })
-        .then(function (data) {
-            if (!data.results || data.results.length === 0) {
-                showNoResults("We couldn't find anything matching your query.");
-                hideLoadingIcon(); // Hide loading icon when no results
-            } else {
-                setTimeout(function () {
-                    hideLoadingIcon(); // Hide loading icon after 1 second
-                    $('#table-of-contents').removeClass('initialHide');
-                    $('#mainSection').removeClass('initialHide');
-                    $('#searchBox').removeClass('is-10 is-centered is-offset-1').addClass('is-3');
-                    $('#pubmedLink').addClass('hidden');
-                }, 700);
+    .then(function (response) {
+        if (!response.ok) {
+            showErrorDb("Something is wrong with our database. Try again Later.");
+            hideLoadingIcon(); // Hide loading icon on error
+            throw new Error("Database error");
+        }
+        return response.json();
+    })
+    .then(function (data) {
+        if (!data.results || data.results.length === 0) {
+            showNoResults("We couldn't find anything matching your query.");
+            hideLoadingIcon(); // Hide loading icon when no results
+            throw new Error("No results found");
+        }
 
-                var uniprotAccessionCode = data.results[0].primaryAccession;
-                try {
-                    var pdbID = (data.results[0].uniProtKBCrossReferences[0].id).toLowerCase();
-                    getPDBImg(pdbID);
-                } catch (error) {
-                }
+        const uniprotAccessionCode = data.results[0].primaryAccession;
+        const pdbID = data.results[0].uniProtKBCrossReferences[0]?.id?.toLowerCase() || "";
+        const returnedGeneName = data.results[0].genes[0].geneName.value;
 
-                var returnedGeneName = data.results[0].genes[0].geneName.value;
+        // Create an array of promises for all the fetch operations
+        const fetchPromises = [
+            getPDBImg(pdbID),
+            getUniProtInfo(uniprotAccessionCode),
+            getPubMedArticles(returnedGeneName, speciesName, NCBIAPIKey),
+            fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=${uniprotAccessionCode}&api_key=${NCBIAPIKey}&retmode=json&retmax=1`)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    const genbankUID = data.esearchresult.idlist;
+                    return getGenbankInfo(genbankUID, NCBIAPIKey);
+                })
+        ];
 
-                //uniprot + PDB data!
-                //card 1
+        // Wait for all promises to resolve
+        return Promise.all(fetchPromises);
+    })
+    .then(function () {
+        // All fetch operations are complete
+        hideLoadingIcon();
+        $('#table-of-contents').removeClass('initialHide');
+        $('#mainSection').removeClass('initialHide');
+    })
+    .catch(function (error) {
+        // Handle errors from any of the fetch operations
+        console.error(error);
+        hideLoadingIcon();
+    });
 
-                getUniProtInfo(uniprotAccessionCode);
 
-                //get pubmed links
-                getPubMedArticles(returnedGeneName, speciesName, NCBIAPIKey);
 
-                //get genbank UID and info
-                fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=${uniprotAccessionCode}&api_key=${NCBIAPIKey}&retmode=json&retmax=1`)
-                    .then(function (response) {
-                        return response.json();
-                    })
-                    .then(function (data) {
-                        var genbankUID = data.esearchresult.idlist;
-
-                        //genbank data!
-                        //card 1
-                        getGenbankInfo(genbankUID, NCBIAPIKey);
-                    });
-            }
-        });
 }
 
 
@@ -123,6 +125,7 @@ function getPubMedArticles(ID, species, key) {
                 $("#pubsList").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find relevant PubMed articles related to your gene.</h3>")
                 return
             } else {
+                $("#pubsList").html('')
                 pubmedLinkEl = $('#pubmedLink')
                 pubmedLinkEl.removeClass('hidden')
                 pubmedLinkEl.attr('href', `https://pubmed.ncbi.nlm.nih.gov/?term=${ID}+${species}`)
@@ -204,6 +207,7 @@ function getUniProtInfo(ID) {
 
 
                 diseaseInfoArray.forEach(item => {
+                    $("#phenotypesContent").html('<ul id="phenotypesList"></ul>');
                     if (item.disease) {
                         var diseaseName = item.disease.diseaseId
                         var diseaseDescription = item.disease.description
@@ -230,7 +234,7 @@ function getUniProtInfo(ID) {
                 }
 
                 var expressionPatternsArray = expressionPatterns[0].texts[0].value.split(". ")
-
+                $("#expressionContent").html('<ul id="expressionList"></ul>')
                 for (var i = 0; i < expressionPatternsArray.length; i++) {
                     var patternText = expressionPatternsArray[i];
                     var newLI = $("<li>");
@@ -249,6 +253,7 @@ function getUniProtInfo(ID) {
                     $("#aaContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find a UniProt protein sequence for this Gene.</h3>");
                     return;
                 }
+                $("#aaContent").html('<p id="aaText" style="overflow-wrap: break-word;"></p>')
                 $("#aaText").text(proteinSequence);
             }
             card5();
@@ -261,7 +266,7 @@ function getUniProtInfo(ID) {
                     $("#domainsContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find any BLAST domain data related to this Gene.</h3>")
                     return;
                 }
-
+                $("#domainsContent").html('<ul style="width: 100%;" id="domainsList"></ul>')
                 domainArray.forEach(item => {
                     var domain = item.texts[0].value
                     var domainLI = $("<li>");
@@ -279,6 +284,8 @@ function getUniProtInfo(ID) {
                     $("#interactionsContent").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find any UniProt interaction data related with this Gene.</h3>")
                     return;
                 }
+                $("#interactionsContent").html('<ul style="width: 100%;" id="interactionsList"></ul>')
+
                 var subUnitBlock = subUnit[0].texts[0].value;
 
                 var subUnitArray = subUnitBlock.split('. ');
