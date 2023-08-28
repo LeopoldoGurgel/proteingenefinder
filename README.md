@@ -38,9 +38,9 @@ The Protein Gene Finder is a powerful tool that uses server side APIs informatio
 
 All information displayed is provided by:
 
-UniProt Consortium: The Universal Protein Resource (UniProt) 2021.
-Entrez: National Center for Biotechnology Information (NCBI) 2008.
-Data API: Protein Data Bank (RCSB PDB) 2020.
+- UniProt Consortium: The Universal Protein Resource (UniProt) 2021.
+- Entrez: National Center for Biotechnology Information (NCBI) 2008.
+- Data API: Protein Data Bank (RCSB PDB) 2020.
 
 ## CONTRIBUTIONS
 
