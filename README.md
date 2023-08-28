@@ -1,6 +1,6 @@
 # Gene Search Engine
 
-https://leopoldogurgel.github.io/geneSearchProject/
+https://leopoldogurgel.github.io/proteingenefinder/
 
 ## DESCRIPTION
 
