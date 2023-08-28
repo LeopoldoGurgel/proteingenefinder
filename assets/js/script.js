@@ -6,6 +6,8 @@ var geneDropdown = $("#geneDropdown");
 
 $("#submitBtn").on("click", function (event) {
     event.preventDefault();
+    $('#table-of-contents').addClass('initialHide')
+    $('#mainSection').addClass('initialHide')
 
     var userGene = $("#geneInput").val();
 
@@ -28,42 +30,48 @@ $("#submitBtn").on("click", function (event) {
 
 //gets accession number and PDB id of user search
 function fetchAccessionID(geneName, speciesName) {
+    showLoadingIcon(); // Show loading icon immediately
+
     fetch(`https://rest.uniprot.org/uniprotkb/search?query=${geneName}+AND+organism_name:${speciesName}+AND+reviewed:true&fields=accession,xref_pdb,gene_names&format=json&size=2`)
         .then(function (response) {
             if (!response.ok) {
-                throw new Error("Something is wrong with our database. Try again Later.")
+                showErrorDb("Something is wrong with our database. Try again Later.");
+                hideLoadingIcon(); // Hide loading icon on error
             }
             return response.json();
         })
         .then(function (data) {
-            console.log(data)
+            console.log(data);
             if (!data.results || data.results.length === 0) {
-                throw new Error("We couldn't find anything about what you are looking for.")
+                showNoResults("We couldn't find anything matching your query.");
+                hideLoadingIcon(); // Hide loading icon when no results
             } else {
+                setTimeout(function () {
+                    hideLoadingIcon(); // Hide loading icon after 1 second
+                    $('#table-of-contents').removeClass('initialHide');
+                    $('#mainSection').removeClass('initialHide');
+                    $('#searchBox').removeClass('is-10 is-centered is-offset-1').addClass('is-3');
+                    $('#pubmedLink').addClass('hidden');
+                }, 700);
 
-                $('#table-of-contents').removeClass('initialHide')
-                $('#mainSection').removeClass('initialHide')
-                $('#searchBox').removeClass('is-10 is-centered is-offset-1').addClass('is-3')
-                $('#pubmedLink').addClass('hidden');
-
-                var uniprotAccessionCode = data.results[0].primaryAccession
-                console.log(data)
+                var uniprotAccessionCode = data.results[0].primaryAccession;
+                console.log(data);
 
                 try {
                     var pdbID = (data.results[0].uniProtKBCrossReferences[0].id).toLowerCase();
-                    getPDBImg(pdbID)
+                    getPDBImg(pdbID);
                 } catch (error) {
                 }
 
                 var returnedGeneName = data.results[0].genes[0].geneName.value;
 
                 //uniprot + PDB data!
-                //card 1   
+                //card 1
 
-                getUniProtInfo(uniprotAccessionCode)
+                getUniProtInfo(uniprotAccessionCode);
 
                 //get pubmed links
-                getPubMedArticles(returnedGeneName, speciesName, NCBIAPIKey)
+                getPubMedArticles(returnedGeneName, speciesName, NCBIAPIKey);
 
                 //get genbank UID and info
                 fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=${uniprotAccessionCode}&api_key=${NCBIAPIKey}&retmode=json&retmax=1`)
@@ -75,10 +83,39 @@ function fetchAccessionID(geneName, speciesName) {
 
                         //genbank data!
                         //card 1
-                        getGenbankInfo(genbankUID, NCBIAPIKey)
+                        getGenbankInfo(genbankUID, NCBIAPIKey);
                     });
             }
-        })
+        });
+}
+
+
+
+
+function showLoadingIcon() {
+    document.getElementById('loadingIcon').classList.remove('hidden');
+}
+
+function hideLoadingIcon() {
+    document.getElementById('loadingIcon').classList.add('hidden');
+}
+
+function showErrorDb(message) {
+    $('#errorDbNotification').removeClass('is-hidden').text(message);
+    hideNoResults();
+}
+
+function showNoResults(message) {
+    $('#noResultsNotification').removeClass('is-hidden').text(message);
+    hideErrorDb();
+}
+
+function hideErrorDb() {
+    $('#errorDbNotification').addClass('is-hidden').text('');
+}
+
+function hideNoResults() {
+    $('#noResultsNotification').addClass('is-hidden').text('');
 }
 
 //get PubMed articles

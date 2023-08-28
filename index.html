@@ -14,6 +14,7 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 </head>
 
 <body class="has-background-white-ter" style="height: 100vh">
@@ -22,31 +23,33 @@
         <!-- <img src="logo.img"> ARE WE ADDING ONE? -->
 
         <!-- PAGE "LOGO" (IT'S AN ICON, ACTUALLY) AND H1  -->
-        <h1 class="title"><span class="material-symbols-outlined"
-                style="font-size: 1.5em; transform: rotate(20deg);">genetics</span> Protein Gene Search</h1>
+        <h1 class="title" style="margin-bottom:10px"><span class="material-symbols-outlined"
+                style="font-size: 1.5em; transform: rotate(20deg);">genetics</span> Protein Gene Finder</h1>
 
 
     </header>
 
     <main class="columns">
-        <aside id = "searchBox"class="column is-narrow is-10 is-centered is-offset-1" style="height: calc(100vh - 6rem); overflow-y: auto;">
+        <aside id="searchBox" class="column is-narrow is-10 is-centered is-offset-1"
+            style="height: calc(100vh - 6rem); overflow-y: auto;">
             <form name="geneSearch" class="box">
 
 
                 <!-- SEARCH INPUT SECTION -->
                 <div id="line1" style="padding: 5px">
                     <div class="field has-addons">
-                      <div class="control" style="width: 100%;">
-                        <input type="text" id="geneInput" class="input" placeholder="Search..." style="height: 40px; margin-bottom: 5px">
-                        <div id="geneDropdown" class="dropdown-content hidden"></div>
-                      </div>
-                      <div class="control">
-                        <a id="submitBtn" class="button is-primary">Search</a>
-                      </div>
+                        <div class="control" style="width: 100%;">
+                            <input type="text" id="geneInput" class="input" placeholder="Search..."
+                                style="height: 40px; margin-bottom: 5px">
+                            <div id="geneDropdown" class="dropdown-content hidden"></div>
+                        </div>
+                        <div class="control">
+                            <a id="submitBtn" class="button is-primary">Search</a>
+                        </div>
                     </div>
-                  </div>
-                  
-                
+                </div>
+
+
                 <div id="line2" style="padding:5px">
 
 
@@ -131,12 +134,29 @@
             </div>
 
         </aside>
+        <div class="notification is-danger is-hidden" id="errorDbNotification">
+            <!-- Error message will appear here -->
+        </div>
+
+        <div class="notification is-info is-hidden" id="noResultsNotification">
+            <!-- Info message will appear here -->
+        </div>
+
+
+        <div id="loadingIcon" class="loading-container hidden">
+            <i class="fas fa-spinner fa-spin fa-sm"></i> <!-- Spinning loading icon -->
+        </div>
+        
+
         <section id="mainSection" class="initialHide column" style="height: calc(100vh - 6rem); overflow-y: auto;">
+
+
             <div id="summaryBox" class="box">
-                <div id="pdbContainer" style="float: right; display: flex; flex-direction: column; align-items: flex-end;">
+                <div id="pdbContainer"
+                    style="float: right; display: flex; flex-direction: column; align-items: flex-end;">
                     <a href="#" class="button" id="pdbLink" target="_blank">View Structure in PDB</a>
                     <img src="#" class="hidden" id="pdbImg" style="width: auto; height: 250px;">
-                  </div>
+                </div>
                 <h2 style="font-size: 1.5em; font-weight: bold;">Summary</h2>
 
 
@@ -145,28 +165,28 @@
                 <!-- CARD 1 -->
                 <div id="summaryContent">
                     <div style="padding-left: 20px;">
-                      <div style="padding-top: 5px; padding-bottom: 5px;">
-                        <span style="font-weight: bold;">Gene name: </span>
-                        <span id="geneNameDisplay"></span>
-                      </div>
-                      <div style="padding-top: 5px; padding-bottom: 5px;">
-                        <span style="font-weight: bold;">Protein: </span>
-                        <span id="proteinDisplay"></span>
-                      </div>
-                      <div style="padding-top: 5px; padding-bottom: 5px;">
-                        <span style="font-weight: bold;">Organism: </span>
-                        <span id="organismDisplay"></span>
-                      </div>
-                      <div style="padding-top: 5px; padding-bottom: 5px;">
-                        <span style="font-weight: bold;">Protein length: </span>
-                        <span id="aaDisplay"></span>
-                      </div>
-                      <div style="padding-top: 5px; padding-bottom: 5px;">
-                        <span style="font-weight: bold;">Basic summary: </span>
-                        <span id="bsDisplay"></span>
-                      </div>
+                        <div style="padding-top: 5px; padding-bottom: 5px;">
+                            <span style="font-weight: bold;">Gene name: </span>
+                            <span id="geneNameDisplay"></span>
+                        </div>
+                        <div style="padding-top: 5px; padding-bottom: 5px;">
+                            <span style="font-weight: bold;">Protein: </span>
+                            <span id="proteinDisplay"></span>
+                        </div>
+                        <div style="padding-top: 5px; padding-bottom: 5px;">
+                            <span style="font-weight: bold;">Organism: </span>
+                            <span id="organismDisplay"></span>
+                        </div>
+                        <div style="padding-top: 5px; padding-bottom: 5px;">
+                            <span style="font-weight: bold;">Protein length: </span>
+                            <span id="aaDisplay"></span>
+                        </div>
+                        <div style="padding-top: 5px; padding-bottom: 5px;">
+                            <span style="font-weight: bold;">Basic summary: </span>
+                            <span id="bsDisplay"></span>
+                        </div>
                     </div>
-                  </div>
+                </div>
             </div>
 
             <!-- CARD 2 -->
@@ -179,13 +199,15 @@
 
             <!-- CARD 3 -->
             <div id="publicationsBox" class="box">
-                <h2 style="font-size: 1.5em; font-weight: bold; display: inline-block; vertical-align: middle;">Relevant Articles:</h2>
-                <a href="#" class="button hidden" id="pubmedLink" target="_blank" style="float: right; vertical-align: middle;">View More in PubMed</a>
+                <h2 style="font-size: 1.5em; font-weight: bold; display: inline-block; vertical-align: middle;">Relevant
+                    Articles:</h2>
+                <a href="#" class="button hidden" id="pubmedLink" target="_blank"
+                    style="float: right; vertical-align: middle;">View More in PubMed</a>
                 <div id="publicationsContent" style="padding-left: 20px;">
                     <ol id="pubsList"></ol>
                 </div>
             </div>
-            
+
 
             <!-- CARD 4 -->
             <div id="expressionBox" class="box">
@@ -233,21 +255,21 @@
         <div class="content has-text-centered" style="margin-top:30px">
             <p>
                 <strong>&copy; 2023 Protein Gene Finder</strong> <br>
-  
-  
+
+
             </p>
         </div>
         <a href="./assets/html/contact.html" style="margin: 0 20px;">Contact Us</a>
         <a href="./assets/html/credits.html" style="margin: 0 20px;">Credits</a>
     </footer>
-            <!--link jquery-->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    
-            <!-- link jquery UI-->
-            <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-            <script src="./assets/js/script.js"></script>
-            <script src="./assets/js/filterResults.js"></script>
+    <!--link jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- link jquery UI-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="./assets/js/script.js"></script>
+    <script src="./assets/js/filterResults.js"></script>
 </body>
 
 </html>
