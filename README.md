@@ -1,10 +1,10 @@
-# Gene Search Engine
+# Protein Gene Finder
 
-https://leopoldogurgel.github.io/geneSearchProject/
+https://leopoldogurgel.github.io/proteingenefinder/
 
 ## DESCRIPTION
 
-The Gene Search Engine is a powerful tool that uses server side APIs information to simplify the process of searching for genes and related genetic information. This repository contains the source code for the Gene Search Engine application.
+The Protein Gene Finder is a powerful tool that uses server side APIs information to simplify the process of searching for protein genes and related genetic information. This repository contains the source code for the Protein Gene Finder application.
 
 ![Alt text](./assets/images/landingPage.png "Page screenshot")
 
