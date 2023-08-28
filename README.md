@@ -2,17 +2,23 @@
 
 https://leopoldogurgel.github.io/proteingenefinder/
 
+
+
 ## DESCRIPTION
 
 The Protein Gene Finder is a powerful tool that uses server side APIs information to simplify the process of searching for protein genes and related genetic information. This repository contains the source code for the Protein Gene Finder application.
 
 ![Alt text](./assets/images/landingPage.png "Page screenshot")
 
+
+
 ## RESOURCES
 
  - Gene Search: Easily search for genes by their name, disorders associated or tag words associated with them.
  - Comprehensive Information: Access detailed information well organized in a clear and easy to read Userfriendly Interface.
  - PubMed Integration: Your search will also bring the most recent articles pubished in PubMed DataBase.
+
+
 
 ## INSTRUCTIONS
 
@@ -34,6 +40,8 @@ The Protein Gene Finder is a powerful tool that uses server side APIs informatio
 
 ![Alt text](./assets/images/dropdownImg.jpg "Forgot what you read yesterday? We remind you!")
 
+
+
 ## CREDITS
 
 All information displayed is provided by:
@@ -41,6 +49,8 @@ All information displayed is provided by:
 - UniProt Consortium: The Universal Protein Resource (UniProt) 2021.
 - Entrez: National Center for Biotechnology Information (NCBI) 2008.
 - Data API: Protein Data Bank (RCSB PDB) 2020.
+
+
 
 ## CONTRIBUTIONS
 
@@ -51,6 +61,8 @@ You are welcome to help if you have any ideas to improve our project! If you wan
 3 - Make the changes you have in mind.
 4 - Commit your changes and push them to your fork.
 5 - Open a pull request detailing the changes you've made.
+
+
 
 ## LICENSE
 
