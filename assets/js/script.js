@@ -5,9 +5,6 @@ var geneDropdown = $("#geneDropdown");
 
 
 $("#submitBtn").on("click", function (event) {
-    $('#table-of-contents').removeClass('initialHide')
-    $('#mainSection').removeClass('initialHide')
-    $('#searchBox').removeClass('is-10 is-centered is-offset-1').addClass('is-3')
     event.preventDefault();
 
     var userGene = $("#geneInput").val();
@@ -26,6 +23,7 @@ $("#submitBtn").on("click", function (event) {
 
 
     fetchAccessionID(userGene, userSpecies)
+
 });
 
 //gets accession number and PDB id of user search
@@ -43,6 +41,11 @@ function fetchAccessionID(geneName, speciesName) {
                 throw new Error("We couldn't find anything about what you are looking for.")
             } else {
 
+                $('#table-of-contents').removeClass('initialHide')
+                $('#mainSection').removeClass('initialHide')
+                $('#searchBox').removeClass('is-10 is-centered is-offset-1').addClass('is-3')
+                $('#pubmedLink').addClass('hidden');
+                
                 var uniprotAccessionCode = data.results[0].primaryAccession
                 console.log(data)
 
@@ -93,6 +96,9 @@ function getPubMedArticles(ID, species) {
                 $("#pubsList").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find relevant PubMed articles related to your gene.</h3>")
                 return
             } else {
+                pubmedLinkEl = $('#pubmedLink')
+                pubmedLinkEl.removeClass('hidden')
+                pubmedLinkEl.attr('href', `https://pubmed.ncbi.nlm.nih.gov/?term=${ID}+${species}`)
                 data.esearchresult.idlist.forEach(pmid => {
                     fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`)
                         .then(function (response) {
@@ -127,12 +133,6 @@ function getPubMedArticles(ID, species) {
 
 
                             $("#pubsList").append(authorsLine);
-
-                            // var articleAuthors = $("<p>")
-                            // data.result[pmid].authors.forEach(name => {
-
-                            // });
-
                         })
                 })
             }
@@ -150,6 +150,8 @@ function getPDBImg(ID) {
             var pdbImgEl = $('#pdbImg'); // Get the image element
             pdbImgEl.removeClass("hidden");
             pdbImgEl.attr('src', imageUrl); // Set the src attribute of the image element
+            pdbLinkEl = $('#pdbLink')
+            pdbLinkEl.attr('href', `https://www.rcsb.org/structure/${ID}`)
         });
 }
 
@@ -295,22 +297,6 @@ $("#aaBtn").on("click", function () {
 })
 
 
-// was trying to fix a bug by clearing everything as the first
-// function called when the search button was clicked.
-// didnt work.
-
-// function refreshContent() {
-//     $("#interactionsList").empty();
-//     $("#geneNameDisplay").empty();
-//     $("#proteinDisplay").empty();
-//     $("#organismDisplay").empty();
-//     $("#aaDisplay").empty();
-//     $("#bsDisplay").empty();
-//     $("#phenotypesList").empty();
-//     $("#pubsList").empty();
-//     $("#aaText").empty();
-// }
-
 //get genbank info
 function getGenbankInfo(ID, key) {
     fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gene&id=${ID}&api_key=${key}&retmode=json`)
@@ -350,7 +336,7 @@ function getGenbankInfo(ID, key) {
 $("#geneInput").on("click", function () {
     $(geneDropdown).removeClass("hidden");
     updateSearchHistory();
-  });
+});
 
 var updateSearchHistory = function () {
     geneDropdown.empty();
@@ -366,14 +352,14 @@ $(geneDropdown).on("click", "a", function () {
     var value = $(this).text();
     $("#geneInput").val(value);
     $(geneDropdown).addClass("hidden");
-  });
+});
 
 //closes the dropdown when clicked out
 $(document).on("click", function (event) {
     if (
-      !$(event.target).is("#geneInput") &&
-      !$(event.target).closest(geneDropdown).length
+        !$(event.target).is("#geneInput") &&
+        !$(event.target).closest(geneDropdown).length
     ) {
-      geneDropdown.addClass("hidden");
+        geneDropdown.addClass("hidden");
     }
-  }); 
+}); 

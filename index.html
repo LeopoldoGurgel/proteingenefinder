@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gene Search Engine</title>
+    <title>Protein Gene Finder</title>
     <!-- link bulma framework -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <!-- link jquery UI-->
@@ -133,7 +133,10 @@
         </aside>
         <section id="mainSection" class="initialHide column" style="height: calc(100vh - 6rem); overflow-y: auto;">
             <div id="summaryBox" class="box">
-                <img src="#" class="hidden" id="pdbImg" style="width: 100px; height: 130px; float: right;">
+                <div id="pdbContainer" style="float: right; display: flex; flex-direction: column; align-items: flex-end;">
+                    <a href="#" class="button" id="pdbLink" target="_blank">View Structure in PDB</a>
+                    <img src="#" class="hidden" id="pdbImg" style="width: auto; height: 250px;">
+                  </div>
                 <h2 style="font-size: 1.5em; font-weight: bold;">Summary</h2>
 
 
@@ -142,18 +145,28 @@
                 <!-- CARD 1 -->
                 <div id="summaryContent">
                     <div style="padding-left: 20px;">
+                      <div style="padding-top: 5px; padding-bottom: 5px;">
                         <span style="font-weight: bold;">Gene name: </span>
-                        <span id="geneNameDisplay"></span><br>
+                        <span id="geneNameDisplay"></span>
+                      </div>
+                      <div style="padding-top: 5px; padding-bottom: 5px;">
                         <span style="font-weight: bold;">Protein: </span>
-                        <span id="proteinDisplay"></span><br>
+                        <span id="proteinDisplay"></span>
+                      </div>
+                      <div style="padding-top: 5px; padding-bottom: 5px;">
                         <span style="font-weight: bold;">Organism: </span>
-                        <span id="organismDisplay"></span><br>
+                        <span id="organismDisplay"></span>
+                      </div>
+                      <div style="padding-top: 5px; padding-bottom: 5px;">
                         <span style="font-weight: bold;">Protein length: </span>
-                        <span id="aaDisplay"></span><br>
+                        <span id="aaDisplay"></span>
+                      </div>
+                      <div style="padding-top: 5px; padding-bottom: 5px;">
                         <span style="font-weight: bold;">Basic summary: </span>
                         <span id="bsDisplay"></span>
+                      </div>
                     </div>
-                </div>
+                  </div>
             </div>
 
             <!-- CARD 2 -->
@@ -166,11 +179,13 @@
 
             <!-- CARD 3 -->
             <div id="publicationsBox" class="box">
-                <h2 style="font-size: 1.5em; font-weight: bold;">Relevant Articles:</h2>
+                <h2 style="font-size: 1.5em; font-weight: bold; display: inline-block; vertical-align: middle;">Relevant Articles:</h2>
+                <a href="#" class="button hidden" id="pubmedLink" target="_blank" style="float: right; vertical-align: middle;">View More in PubMed</a>
                 <div id="publicationsContent" style="padding-left: 20px;">
                     <ol id="pubsList"></ol>
                 </div>
             </div>
+            
 
             <!-- CARD 4 -->
             <div id="expressionBox" class="box">
@@ -222,6 +237,18 @@
         <script src="./assets/js/script.js"></script>
         <script src="./assets/js/filterResults.js"></script>
     </main>
+
+    <footer>
+        <div class="content has-text-centered">
+            <p>
+                <strong>&copy; 2023 Protein Gene Finder</strong> <br>
+
+
+            </p>
+        </div>
+        <a href="contact.html">Contact Us</a>
+        <a href="credits.html">Credits</a>
+    </footer>
 </body>
 
 </html>
