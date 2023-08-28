@@ -4,25 +4,53 @@ https://leopoldogurgel.github.io/geneSearchProject/
 
 ## DESCRIPTION
 
-This is a project of a Gene serach engine that uses server side APIs information to feed the application with basic info
-about the gene the user is looking for, such as Gene name, structure, aminoacids length and organisms in which they are found.
-It will also bring research articles about it and a graphic picture of the protein product.
+The Gene Search Engine is a powerful tool that uses server side APIs information to simplify the process of searching for genes and related genetic information. This repository contains the source code for the Gene Search Engine application.
 
-## Screenshot of the app goes here
+![Alt text](./assets/images/landingPage.png "Page screenshot")
 
 ## RESOURCES
 
-This project was built using javascript to fetch information from Server side APIS. Styling was made using Jquery and tailwind frameworks.
+ - Gene Search: Easily search for genes by their name, disorders associated or tag words associated with them.
+ - Comprehensive Information: Access detailed information well organized in a clear and easy to read Userfriendly Interface.
+ - PubMed Integration: Your search will also bring the most recent articles pubished in PubMed DataBase.
 
 ## INSTRUCTIONS
 
-By entering a gene name in the form, when you click the submit button, the information you are looking for you be presented in the right hand of the page
-organized in sections. First one will show the basic info about the gine gene, the second will bring phenotype, diseases and traits associated and the third 
-will show articles related to it.
+1 - By accessing the webpage you will encounter a search form. In the text input you can search for a gene name, a genetic disease or a body tissue. By clicking on the dropdown menu, you can change the species related to your search. The default value is human.
+
+2 - After clicking on the search button, the search form will move to the left side of the page and the information will show on the right.
+
+![Alt text](./assets/images/searchResult.jpg "Search results").
+
+3 - You can select what you want to see and what you want to hide in order to make your screen cleaner. Click on the filter results button. A modal box will appear and you can select what will be displayed on your screen.
+
+![Alt text](./assets/images/filterImg.jpg "Filter your content")
+
+4 - A list of the content displayed on your screen is located below the search form, so you can find what you are looking for without much effort.
+
+![Alt text](./assets/images/tableOfContents.jpg "Find what you want easily")
+
+5 - Your search will be saved in your browser and, whenever you click on the search input, your recent searches will be displayed for you.
+
+![Alt text](./assets/images/dropdownImg.jpg "Forgot what you read yesterday? We remind you!")
 
 ## CREDITS
 
+All information displayed is provided by:
 
+UniProt Consortium: The Universal Protein Resource (UniProt) 2021.
+Entrez: National Center for Biotechnology Information (NCBI) 2008.
+Data API: Protein Data Bank (RCSB PDB) 2020.
+
+## CONTRIBUTIONS
+
+You are welcome to help if you have any ideas to improve our project! If you want to do so, just follow these steps:
+
+1 - Fork the repository.
+2 - Create a new branch for you new feature or bug fix.
+3 - Make the changes you have in mind.
+4 - Commit your changes and push them to your fork.
+5 - Open a pull request detailing the changes you've made.
 
 ## LICENSE
 
