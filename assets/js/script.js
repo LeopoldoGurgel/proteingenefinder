@@ -109,14 +109,16 @@ function hideNoResults() {
 }
 
 //get PubMed articles
-function getPubMedArticles(ID, species) {
+function getPubMedArticles(ID, species, key) {
     $("#pubsList").empty(); //clears the text from previous searches.
-    fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=science[journal]+AND+${ID}+AND+${species}&retmax=5&retmode=json`)
+    console.log(ID, species)
+    fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${ID}+AND+${species}&api_key=${key}&retmax=5&retmode=json`)
 
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
+            console.log(data);
             if (!data.esearchresult || data.esearchresult.idlist.length === 0) {
                 $("#pubsList").html("<h3 style='font-size: 1.2em; font-weight: bold'>Sorry. We couldn't find relevant PubMed articles related to your gene.</h3>")
                 return
@@ -125,7 +127,7 @@ function getPubMedArticles(ID, species) {
                 pubmedLinkEl.removeClass('hidden')
                 pubmedLinkEl.attr('href', `https://pubmed.ncbi.nlm.nih.gov/?term=${ID}+${species}`)
                 data.esearchresult.idlist.forEach(pmid => {
-                    fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&retmode=json`)
+                    fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmid}&api_key=${key}&retmode=json`)
                         .then(function (response) {
                             return response.json();
                         })
@@ -182,7 +184,7 @@ function getUniProtInfo(ID) {
             return response.json();
         })
         .then(function (data) {
-
+            console.log(data)
             //card 1 variables
 
             var proteinName = data.proteinDescription.recommendedName.fullName.value
