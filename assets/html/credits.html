@@ -8,20 +8,21 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <!-- link jquery UI-->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="./assets/css/styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 </head>
-<body>
+<body style="text-align: center; padding: 40px;">
+    
     <button onClick="goToMain()">Return to Main</button>
-    <header class="card-header-title">
+    <header class="card-header-title is-centered is-medium">
         <!-- <img src="logo.img"> ARE WE ADDING ONE? -->
 
         <!-- PAGE "LOGO" (IT'S AN ICON, ACTUALLY) AND H1  -->
         <h1 class="title"><span class="material-symbols-outlined"
-                style="font-size: 1.5em; transform: rotate(20deg);">genetics</span> Gene Search Engine</h1>
+                style="font-size: 1em; transform: rotate(20deg);">genetics</span> Gene Search Engine</h1>
 
     </header>
 
@@ -34,7 +35,7 @@
 
     <script>
         function goToMain() {
-            window.location.href='index.html'
+            window.location.href='../../index.html'
         }
     </script>
 </body>
