@@ -40,24 +40,27 @@ function fetchAccessionID(geneName, speciesName) {
         if (!data.results || data.results.length === 0) {
             showNoResults("We couldn't find anything matching your query.");
             hideLoadingIcon(); // Hide loading icon when no results
-            throw new Error("No results found");
         }
 
-        const uniprotAccessionCode = data.results[0].primaryAccession;
-        const pdbID = data.results[0].uniProtKBCrossReferences[0]?.id?.toLowerCase() || "";
-        const returnedGeneName = data.results[0].genes[0].geneName.value;
+        var uniprotAccessionCode = data.results[0].primaryAccession;
+        var pdbID = data.results[0].uniProtKBCrossReferences[0]?.id?.toLowerCase() || "";
+        var returnedGeneName = data.results[0].genes[0].geneName.value;
 
         // Create an array of promises for all the fetch operations
-        const fetchPromises = [
+        var fetchPromises = [
             getPDBImg(pdbID),
             getUniProtInfo(uniprotAccessionCode),
             getPubMedArticles(returnedGeneName, speciesName, NCBIAPIKey),
+            
             fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=${uniprotAccessionCode}&api_key=${NCBIAPIKey}&retmode=json&retmax=1`)
                 .then(function (response) {
                     return response.json();
                 })
                 .then(function (data) {
+
                     const genbankUID = data.esearchresult.idlist;
+                  console.log(   getGenbankInfo(genbankUID, NCBIAPIKey));
+                
                     return getGenbankInfo(genbankUID, NCBIAPIKey);
                 })
         ];
@@ -65,14 +68,14 @@ function fetchAccessionID(geneName, speciesName) {
         // Wait for all promises to resolve
         return Promise.all(fetchPromises);
     })
-    .then(function () {
+    .then(function (values) {
+        console.log(values);
         // All fetch operations are complete
         hideLoadingIcon();
         $('#table-of-contents').removeClass('initialHide');
         $('#mainSection').removeClass('initialHide');
     })
     .catch(function (error) {
-        // Handle errors from any of the fetch operations
         console.error(error);
         hideLoadingIcon();
     });
@@ -87,25 +90,20 @@ function fetchAccessionID(geneName, speciesName) {
 function showLoadingIcon() {
     document.getElementById('loadingIcon').classList.remove('hidden');
 }
-
 function hideLoadingIcon() {
     document.getElementById('loadingIcon').classList.add('hidden');
 }
-
 function showErrorDb(message) {
     $('#errorDbNotification').removeClass('is-hidden').text(message);
     hideNoResults();
 }
-
 function showNoResults(message) {
     $('#noResultsNotification').removeClass('is-hidden').text(message);
     hideErrorDb();
 }
-
 function hideErrorDb() {
     $('#errorDbNotification').addClass('is-hidden').text('');
 }
-
 function hideNoResults() {
     $('#noResultsNotification').addClass('is-hidden').text('');
 }
@@ -317,7 +315,7 @@ $("#aaBtn").on("click", function () {
 
 //get genbank info
 function getGenbankInfo(ID, key) {
-    fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gene&id=${ID}&api_key=${key}&retmode=json`)
+    return fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gene&id=${ID}&api_key=${key}&retmode=json`)
         .then(function (response) {
             return response.json();
         })
@@ -333,12 +331,15 @@ function getGenbankInfo(ID, key) {
             $("#organismDisplay").text(organismCommon + " (" + organismScientific + ")");
 
             var geneLocation = data.result[`${ID}`].maplocation
+            $('#geneLocationDisplay').text(geneLocation);
 
             var exonCount = data.result[`${ID}`].genomicinfo[0].exoncount
+            $('#exonCountDisplay').text(exonCount)
 
             var geneLength = ((data.result[`${ID}`].genomicinfo[0].chrstop) - (data.result[`${ID}`].genomicinfo[0].chrstart)) / 1000
+            $('#geneLengthDisplay').text(geneLength)
 
-            var geneTitle = data.result[`${ID}`].name + " (" + data.result[`${ID}`].organism.scientificname + ")"
+            return Promise.resolve(data)
         });
 }
 
