@@ -56,11 +56,11 @@ All information displayed is provided by:
 
 You are welcome to help if you have any ideas to improve our project! If you want to do so, just follow these steps:
 
-1 - Fork the repository.
-2 - Create a new branch for you new feature or bug fix.
-3 - Make the changes you have in mind.
-4 - Commit your changes and push them to your fork.
-5 - Open a pull request detailing the changes you've made.
+- 1 - Fork the repository.
+- 2 - Create a new branch for you new feature or bug fix.
+- 3 - Make the changes you have in mind.
+- 4 - Commit your changes and push them to your fork.
+- 5 - Open a pull request detailing the changes you've made.
 
 
 
