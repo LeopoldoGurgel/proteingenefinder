@@ -1,4 +1,4 @@
-# Gene Research Engine
+# Gene Search Engine
 
 https://leopoldogurgel.github.io/geneSearchProject/
 
