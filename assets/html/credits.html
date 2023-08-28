@@ -16,13 +16,13 @@
 </head>
 <body style="text-align: center; padding: 40px;">
     
-    <button onClick="goToMain()">Return to Main</button>
+    <button class = "button is-medium" onClick="goToMain()">Return to Main</button>
     <header class="card-header-title is-centered is-medium">
         <!-- <img src="logo.img"> ARE WE ADDING ONE? -->
 
         <!-- PAGE "LOGO" (IT'S AN ICON, ACTUALLY) AND H1  -->
         <h1 class="title"><span class="material-symbols-outlined"
-                style="font-size: 1em; transform: rotate(20deg);">genetics</span> Gene Search Engine</h1>
+                style="font-size: 1em; transform: rotate(20deg);">genetics</span> Protein Gene Finder</h1>
 
     </header>
 
@@ -32,7 +32,17 @@
 
     <p>Data API: Protein Data Bank (RCSB PDB) 2020.</p>
 
-
+    <footer class="content has-text-centered" style="padding-bottom: 20px">
+        <div class="content has-text-centered" style="margin-top:30px">
+            <p>
+                <strong>&copy; 2023 Protein Gene Finder</strong> <br>
+  
+  
+            </p>
+        </div>
+        <a href="contact.html" style="margin: 0 20px;">Contact Us</a>
+        <a href="credits.html" style="margin: 0 20px;">Credits</a>
+    </footer>
     <script>
         function goToMain() {
             window.location.href='../../index.html'

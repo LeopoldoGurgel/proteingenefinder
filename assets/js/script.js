@@ -45,7 +45,7 @@ function fetchAccessionID(geneName, speciesName) {
                 $('#mainSection').removeClass('initialHide')
                 $('#searchBox').removeClass('is-10 is-centered is-offset-1').addClass('is-3')
                 $('#pubmedLink').addClass('hidden');
-                
+
                 var uniprotAccessionCode = data.results[0].primaryAccession
                 console.log(data)
 
