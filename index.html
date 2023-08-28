@@ -15,6 +15,7 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="icon" type="image/png" href="./assets/images/icon.png">
 </head>
 
 <body class="has-background-white-ter" style="height: 100vh">
@@ -79,7 +80,7 @@
                         <input type="checkbox" id="phenotypesCB" checked> Diseases Associated<br>
                         <input type="checkbox" id="publicationsCB" checked> Publications <br>
                         <input type="checkbox" id="expressionCB" checked> Expression Patterns <br>
-                        <input type="checkbox" id="aaCB" checked> Aminoacid Sequence <br>
+                        <input type="checkbox" id="aaCB" checked> Protein Sequence <br>
                         <input type="checkbox" id="domainsCB" checked> Domains<br>
                         <input type="checkbox" id="interactionsCB" checked> Interactions <br>
                         <button id="closeBtn" class="modal-close is-large" aria-label="close"></button>
@@ -144,8 +145,9 @@
 
 
         <div id="loadingIcon" class="loading-container hidden">
-            <i class="fas fa-spinner fa-spin fa-sm"></i> <!-- Spinning loading icon -->
+            <span class="spinner-icon material-symbols-outlined" style="font-size: 3rem;">genetics</span>
         </div>
+        
         
 
         <section id="mainSection" class="initialHide column" style="height: calc(100vh - 6rem); overflow-y: auto;">
@@ -191,7 +193,7 @@
 
             <!-- CARD 2 -->
             <div id="phenotypesBox" class="box">
-                <h2 style="font-size: 1.5em; font-weight: bold;">Phenotypes Associated:</h2>
+                <h2 style="font-size: 1.5em; font-weight: bold;">Diseases Associated:</h2>
                 <div id="phenotypesContent" style="padding-left: 20px;">
                     <ul id="phenotypesList"></ul>
                 </div>
@@ -255,8 +257,6 @@
         <div class="content has-text-centered" style="margin-top:30px">
             <p>
                 <strong>&copy; 2023 Protein Gene Finder</strong> <br>
-
-
             </p>
         </div>
         <a href="./assets/html/contact.html" style="margin: 0 20px;">Contact Us</a>

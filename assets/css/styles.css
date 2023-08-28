@@ -7915,7 +7915,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 
 .loading-container {
-  position: fixed; /* Use fixed positioning to cover the whole viewport */
+  position: fixed;
   left: 0;
   top: 0;
   width: 100%;
@@ -7927,8 +7927,18 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   align-items: center;
 }
 
-.loading-container .fa-spinner {
-  font-size: 3rem; /* Adjust the size as needed */
+.loading-container .spinner-icon {
+  font-size: 3rem; 
+  animation: spin 2s infinite linear; 
+}
+
+@keyframes spin {
+  from {
+      transform: rotate(0deg);
+  }
+  to {
+      transform: rotate(360deg);
+  }
 }
 
 
@@ -7937,6 +7947,5 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   position: absolute;
   left: 60%;
   top: 4%;
-  /* transform: translate(-50%, -50%); */
-  z-index: 1000; /* Ensure notifications are above other content */
+  z-index: 1000;
 }
