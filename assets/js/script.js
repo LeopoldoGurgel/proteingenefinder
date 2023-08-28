@@ -336,8 +336,10 @@ function getGenbankInfo(ID, key) {
             var exonCount = data.result[`${ID}`].genomicinfo[0].exoncount
             $('#exonCountDisplay').text(exonCount)
 
-            var geneLength = ((data.result[`${ID}`].genomicinfo[0].chrstop) - (data.result[`${ID}`].genomicinfo[0].chrstart)) / 1000
-            $('#geneLengthDisplay').text(geneLength)
+            var geneLength = Math.abs(
+                (data.result[`${ID}`].genomicinfo[0].chrstop - data.result[`${ID}`].genomicinfo[0].chrstart) / 1000
+            ).toFixed(2);
+            $('#geneLengthDisplay').text(geneLength + " kb")
 
             return Promise.resolve(data)
         });
@@ -350,7 +352,7 @@ var updateSearchHistory = function () {
     searchHistory.forEach(function (searchQuery) {
         var searchHistoryButton = $('<a>');
         searchHistoryButton.text(searchQuery);
-        geneDropdown.append(searchHistoryButton);
+        geneDropdown.prepend(searchHistoryButton);
     })
 }
 
